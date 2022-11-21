@@ -1,0 +1,56 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module" // Allows for the use of imports
+  },
+  "plugins": [
+    "eslint-plugin-prettier",
+    "react",
+    "@typescript-eslint",
+    "react-hooks"
+  ],
+  "extends": ["eslint:recommended", "google", "eslint-config-prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "curly": [2, "all"],
+    "new-cap": "off",
+    "require-jsdoc": "off",
+    "semi": "off",
+    "valid-jsdoc": "off",
+    "no-unused-expressions": "off",
+    "camelcase": "off",
+    "no-invalid-this": "off",
+    "no-unused-vars": "off",
+    "react/prop-types": "off", // Disable prop-types as we use TypeScript for type checking
+    "react-hooks/rules-of-hooks": 1, // Checks rules of Hooks
+    "react-hooks/exhaustive-deps": 1, // Checks effect dependencies
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-implicit-any": 0,
+    "@typescript-eslint/no-unused-vars": 0
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": 0,
+        "react/jsx-uses-react": 1,
+        "react/react-in-jsx-scope": 1
+      }
+    }
+  ]
+}
