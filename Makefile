@@ -8,7 +8,10 @@ dev:
 	docker-compose up
 
 kill:
-	docker stop $(docker ps -qa) && docker rm $(docker ps -qa)
+	docker stop $$(docker ps -qa) && docker rm $$(docker ps -qa)
 
 user:
 	docker exec -d medusa-api medusa user -e $(EMAIL) -p $(PASSWORD)
+
+restart:
+	docker-compose restart medusa-api

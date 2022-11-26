@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  admin-panel:
+  medusa-admin:
     user: "${UID}:${GID}"
     env_file:
       - .env
@@ -9,12 +9,14 @@ services:
       dockerfile: Dockerfile
     image: admin-panel:starter
     container_name: medusa-admin
+    depends_on:
+      - medusa-api
     ports:
       - "7000:7000"
     volumes:
       - ./admin-panel:/app/
 
-  api:
+  medusa-api:
     user: "${UID}:${GID}"
     env_file:
       - .env
@@ -24,11 +26,11 @@ services:
     image: backend:starter
     container_name: medusa-api
     depends_on:
-      - postgres
-      - redis
+      - medusa-postgres
+      - medusa-redis
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/medusa-docker
-      REDIS_URL: redis://redis
+      DATABASE_URL: postgresql://${MEDUSA_POSTGRES_USER}:${MEDUSA_POSTGRES_PASSWORD}@medusa-postgres/${MEDUSA_POSTGRES_DB}
+      REDIS_URL: redis://medusa-redis
       NODE_ENV: development
       JWT_SECRET: something
       COOKIE_SECRET: something
@@ -38,31 +40,30 @@ services:
     volumes:
       - ./api:/app/medusa
 
-  postgres:
+  medusa-postgres:
     image: postgres:10.4
     ports:
       - "5432:5432"
+    volumes:
+      - ./.medusa_pgsql_storage:/var/lib/postgresql
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: medusa-docker
+      POSTGRES_USER: ${MEDUSA_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${MEDUSA_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${MEDUSA_POSTGRES_DB}
 
-  minio:
+  medusa-minio:
     image: minio/minio
     ports:
       - "9010:9000"
       - "9011:9001"
     volumes:
-      - minio_storage:/data
+      - ./.medusa_minio_storage:/data
     environment:
       MINIO_ROOT_USER: masoud
       MINIO_ROOT_PASSWORD: Strong#Pass#2022
     command: server --console-address ":9001" /data
 
-  redis:
+  medusa-redis:
     image: redis
     expose:
       - 6379
-
-volumes:
-  minio_storage: {}
