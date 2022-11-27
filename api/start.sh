@@ -1,4 +1,5 @@
 #!/bin/bash
+: '
 rm ~/.config/yarn/link/@medusajs/medusa
 rm ~/.config/yarn/link/medusa-interfaces
 rm ~/.config/yarn/link/medusa-source-shopify-json
@@ -16,5 +17,7 @@ yarn link
 cd ../
 yarn link medusa-source-shopify-json
 cd ../
+'
+yarn
 medusa migrations run
 medusa develop

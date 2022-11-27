@@ -46,9 +46,12 @@ const plugins = [
 	{
 		resolve: 'medusa-source-shopify-json',
 		options: {
-			domain: process.env.SHOPIFY_DOMAIN,
-			password: process.env.SHOPIFY_PASSWORD,
-			updated_after: '2021-01-01'
+			json:{
+				products_path: './schemas/products.json',
+				custom_collections_path: './schemas/custom_collections.json',
+				smart_collections_path: './schemas/smart_collections.json',
+				collects_path: './schemas/collects.json',
+			},
 		}
 	}
   // Uncomment to add Stripe support.

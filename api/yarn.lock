@@ -3686,12 +3686,13 @@ medusa-payment-stripe@^1.1.45:
     medusa-core-utils "^1.1.32"
     stripe "^8.50.0"
 
-medusa-source-shopify@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/medusa-source-shopify/-/medusa-source-shopify-1.2.3.tgz#0c454561e484fe31960ba81416aa85a0ecf11e59"
-  integrity sha512-Cn9mU/kGlahHGrHKub7ccflt+YCixWGzxhuo9rEgoilXQXBPqNo+9NZ3lr58SGi2yyHOJZcWUu6B4OAwrGWumw==
+medusa-source-shopify-json@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/medusa-source-shopify-json/-/medusa-source-shopify-json-1.0.0.tgz#8b0070060763b3dd4e8f1009e06aca2a58ff35ad"
+  integrity sha512-ic24eLL1IWQ9G2TVkYadBKhdiDqNmDySDhoktbXwvkVum7D+WKo9gZJBjGoxaQnNYHGg4hMJxhT/CaZTHpc0jQ==
   dependencies:
     "@babel/plugin-transform-classes" "^7.15.4"
+    "@medusajs/medusa" "^1.6.0"
     "@shopify/shopify-api" "^1.4.1"
     axios "^0.21.4"
     body-parser "^1.19.0"
