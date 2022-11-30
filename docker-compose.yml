@@ -1,5 +1,42 @@
 version: "3.8"
 services:
+  strapi:
+    user: "${UID}:${GID}"
+    container_name: strapi
+    build:
+      context: ./strapi
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./strapi:/srv/app
+    ports:
+      - '1337:1337'
+    environment:
+      JWT_SECRET: ${STRAPI_JWT_SECRET}
+      APP_KEYS: ${STRAPI_APP_KEYS}
+      API_TOKEN_SALT: ${STRAPI_API_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET}
+      DATABASE_HOST: ${STRAPI_DATABASE_HOST}
+      DATABASE_PORT: ${STRAPI_DATABASE_PORT}
+      DATABASE_NAME: ${STRAPI_DATABASE_NAME}
+      DATABASE_USERNAME: ${STRAPI_DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${STRAPI_DATABASE_PASSWORD}
+      DATABASE_SSL: ${STRAPI_DATABASE_SSL}
+    networks:
+      - stack
+
+  strapi-postgres:
+    image: postgres:10.4
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./.strapi_pgsql_storage:/var/lib/postgresql
+    environment:
+      POSTGRES_USER: ${STRAPI_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${STRAPI_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${STRAPI_POSTGRES_DB}
+    networks:
+      - stack
+
   medusa-admin:
     user: "${UID}:${GID}"
     env_file:
@@ -15,30 +52,39 @@ services:
       - "7000:7000"
     volumes:
       - ./admin-panel:/app/
+    networks:
+      - stack
 
   medusa-api:
     user: "${UID}:${GID}"
-    env_file:
-      - .env
     build:
-      context: ./api
+      context: medusa-api
       dockerfile: Dockerfile
     image: backend:starter
     container_name: medusa-api
     depends_on:
       - medusa-postgres
       - medusa-redis
+      - strapi
     environment:
-      DATABASE_URL: postgresql://${MEDUSA_POSTGRES_USER}:${MEDUSA_POSTGRES_PASSWORD}@medusa-postgres/${MEDUSA_POSTGRES_DB}
-      REDIS_URL: redis://medusa-redis
-      NODE_ENV: development
-      JWT_SECRET: something
-      COOKIE_SECRET: something
-      PORT: 9000
+      DATABASE_URL: ${MEDUSA_DATABASE_URL}
+      REDIS_URL: ${MEDUSA_REDIS_URL}
+      NODE_ENV: ${MEDUSA_NODE_ENV}
+      JWT_SECRET: ${MEDUSA_JWT_SECRET}
+      COOKIE_SECRET: ${MEDUSA_COOKIE_SECRET}
+      PORT: ${MEDUSA_PORT}
+      DISABLE_TELEMETRY: ${MEDUSA_DISABLE_TELEMETRY}
+      STRAPI_USER: ${MEDUSA_STRAPI_USER}
+      STRAPI_PASSWORD: ${MEDUSA_STRAPI_PASSWORD}
+      STRAPI_PROTOCOL: ${MEDUSA_STRAPI_PROTOCOL}
+      STRAPI_URL: ${MEDUSA_STRAPI_URL}
+      STRAPI_PORT: ${MEDUSA_STRAPI_PORT}
     ports:
       - "9000:9000"
     volumes:
-      - ./api:/app/medusa
+      - ./medusa-api:/app/medusa
+    networks:
+      - stack
 
   medusa-postgres:
     image: postgres:10.4
@@ -50,6 +96,8 @@ services:
       POSTGRES_USER: ${MEDUSA_POSTGRES_USER}
       POSTGRES_PASSWORD: ${MEDUSA_POSTGRES_PASSWORD}
       POSTGRES_DB: ${MEDUSA_POSTGRES_DB}
+    networks:
+      - stack
 
   medusa-minio:
     image: minio/minio
@@ -62,8 +110,16 @@ services:
       MINIO_ROOT_USER: masoud
       MINIO_ROOT_PASSWORD: Strong#Pass#2022
     command: server --console-address ":9001" /data
+    networks:
+      - stack
 
   medusa-redis:
     image: redis
     expose:
       - 6379
+    networks:
+      - stack
+
+networks:
+  stack:
+    driver: bridge

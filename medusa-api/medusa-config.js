@@ -53,7 +53,7 @@ const plugins = [
 				collects_path: './schemas/collects.json',
 			},
 		}
-	}
+	},
   // Uncomment to add Stripe support.
   // You can create a Stripe account via: https://stripe.com
   // {

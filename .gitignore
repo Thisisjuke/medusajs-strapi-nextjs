@@ -1,3 +1,4 @@
 .env
 .medusa_pgsql_storage
 .medusa_minio_storage
+.strapi_pgsql_storage
