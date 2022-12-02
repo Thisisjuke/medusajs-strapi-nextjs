@@ -4,16 +4,18 @@
   "version": "0.1.0",
   "description": "A Strapi application",
   "scripts": {
-    "develop": "strapi develop",
+    "a": "strapi admin:create-user --firstname=root --lastname=root --email=root@root.root --password=PsSyL3jXtqixVsD",
+    "develop": "strapi routes:list && strapi develop --watch-admin",
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi"
   },
   "devDependencies": {},
   "dependencies": {
-    "@strapi/strapi": "4.5.2",
-    "@strapi/plugin-users-permissions": "4.5.2",
-    "@strapi/plugin-i18n": "4.5.2",
+    "@medusajs/medusa-js": "^1.3.3",
+    "@strapi/plugin-i18n": "4.5.3",
+    "@strapi/plugin-users-permissions": "4.5.3",
+    "@strapi/strapi": "4.5.3",
     "pg": "8.6.0"
   },
   "author": {

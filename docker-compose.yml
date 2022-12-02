@@ -10,6 +10,7 @@ services:
       - ./strapi:/srv/app
     ports:
       - '1337:1337'
+      - '8000:8000'
     environment:
       JWT_SECRET: ${STRAPI_JWT_SECRET}
       APP_KEYS: ${STRAPI_APP_KEYS}

@@ -1,0 +1,8 @@
+FROM node:16-bullseye-slim
+RUN apt update && apt install -y gcc autoconf automake libpng-dev nasm bash
+ARG NODE_ENV=development
+ENV NODE_ENV=${NODE_ENV}
+WORKDIR /srv/app
+EXPOSE 1337
+EXPOSE 8000
+CMD ["npm", "run", "develop"]

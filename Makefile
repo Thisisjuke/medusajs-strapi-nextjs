@@ -13,5 +13,8 @@ kill:
 user:
 	docker exec -d medusa-api medusa user -e $(EMAIL) -p $(PASSWORD)
 
-restart:
+restart-medusa:
 	docker-compose restart medusa-api
+
+restart-strapi:
+	docker-compose restart strapi
