@@ -6,6 +6,28 @@ import PluginIcon from './components/PluginIcon';
 
 export default {
   register(app) {
+    app.createSettingSection(
+      {
+        id: pluginId,
+        intlLabel: {
+          id: `${pluginId}.plugin.name`,
+          defaultMessage: 'Medusa Products',
+        },
+      },
+      [
+        {
+          intlLabel: {
+            id: `${pluginId}.plugin.name`,
+            defaultMessage: 'API Settings',
+          },
+          id: 'settings',
+          to: `/settings/${pluginId}`,
+          Component: async () => {
+            return import('./pages/SettingsPage');
+          },
+        },
+      ]
+    );
     app.addMenuLink({
       to: `/plugins/${pluginId}`,
       icon: PluginIcon,
