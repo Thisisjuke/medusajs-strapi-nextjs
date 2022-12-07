@@ -1,8 +1,8 @@
 export default [
   {
     method: 'GET',
-    path: '/find',
-    handler: 'productReference.find',
+    path: '/pages',
+    handler: 'page.find',
     config: {
       policies: [],
       auth: false

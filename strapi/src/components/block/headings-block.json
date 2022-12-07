@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_block_headings_blocks",
+  "info": {
+    "displayName": "HeadingsBlock",
+    "icon": "grip-lines",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "subtitle": {
+      "type": "richtext"
+    },
+    "title": {
+      "type": "richtext"
+    }
+  }
+}

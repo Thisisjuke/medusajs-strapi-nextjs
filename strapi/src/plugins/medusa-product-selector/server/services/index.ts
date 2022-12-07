@@ -1,7 +1,7 @@
-import productReferenceService from './product-reference';
+import pageService from './page';
 import medusaProductsService from './medusa-products';
 
 export default {
-  productReference: productReferenceService,
+  page: pageService,
   medusaProducts: medusaProductsService,
 };

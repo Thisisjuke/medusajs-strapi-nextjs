@@ -1,5 +1,5 @@
-import productReference from './product-reference'
+import page from './page'
 
 export default {
-  'product-reference': productReference
+  'page': page
 };

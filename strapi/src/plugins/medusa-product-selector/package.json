@@ -7,7 +7,9 @@
     "description": "Link your content models to products coming from Medusa.",
     "kind": "plugin"
   },
-  "dependencies": {},
+  "dependencies": {
+    "react-hook-form": "^7.40.0"
+  },
   "devDependencies": {
     "typescript": "4.6.3"
   },

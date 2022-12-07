@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "product_references",
+  "collectionName": "page",
   "info": {
-    "singularName": "product-reference",
-    "pluralName": "product-references",
-    "displayName": "Product Reference"
+    "singularName": "page",
+    "pluralName": "pages",
+    "displayName": "Page"
   },
   "options": {
     "draftAndPublish": false,
@@ -22,6 +22,13 @@
     "productIds": {
       "type": "customField",
       "customField": "plugin::medusa-product-selector.products"
+    },
+    "blocks": {
+      "type": "dynamiczone",
+      "components": [
+        "block.headings-block"
+      ],
+      "min": 1
     }
   }
 }

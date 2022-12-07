@@ -7,7 +7,7 @@ import {
   CardContent,
   CardTitle,
   CardSubtitle,
-  CardBadge
+  CardBadge,
 } from '@strapi/design-system'
 
 interface ProductCardProps {
@@ -15,19 +15,52 @@ interface ProductCardProps {
   subtitle?: string
   badge?: string
   imageSrc?: string
+  checked?: boolean
+  displayCheck?: boolean
+  defaultChecked?: boolean
+  value?: string
+  register?: (...args) => Record<string, any>
 }
 
-export const ProductCard = ({title, subtitle, badge, imageSrc}:ProductCardProps) => {
+const Ellipsis = ({children}) => (
+  <div style={{
+    display: 'table',
+    tableLayout: 'fixed',
+    width: '100%'
+  }}>
+  <div style={{
+    display: 'table-cell',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap'
+  }}>{children}</div>
+  </div>
+)
+
+export const ProductCard = ({title, subtitle, badge, imageSrc, displayCheck, value, register, defaultChecked }:ProductCardProps) => {
 
   return(
-    <Card id="third">
+    <Card style={{height: '100%'}}>
       <CardHeader>
-        {imageSrc && <CardAsset>{imageSrc}</CardAsset>}
+        {imageSrc && <CardAsset style={{pointerEvents: 'none', userSelect: 'none'}} src={imageSrc} />}
+        {displayCheck && <input
+          style={{
+            cursor: 'pointer',
+            position: "absolute",
+            top: '8px',
+            left: '8px',
+          }}
+          key={value}
+          type={"checkbox"}
+          value={value}
+          defaultChecked={defaultChecked}
+          {...register("isCardSelected")}
+        />}
       </CardHeader>
       <CardBody>
         <CardContent>
-          {title && <CardTitle>{title}</CardTitle>}
-          {subtitle && <CardSubtitle>{subtitle}</CardSubtitle>}
+          {title && <CardTitle><Ellipsis>{title.replace( /(<([^>]+)>)/ig, '')}</Ellipsis></CardTitle>}
+          {subtitle && <CardSubtitle><Ellipsis>{subtitle.replace( /(<([^>]+)>)/ig, '')}</Ellipsis></CardSubtitle>}
         </CardContent>
         {badge && <CardBadge>{badge}</CardBadge>}
       </CardBody>

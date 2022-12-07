@@ -11,10 +11,16 @@ import {Illo} from "../../components/Illo";
 import {ProductList} from "../../components/ProductList";
 import {ProductCard} from "../../components/ProductCard";
 import medusaProductsRequests from "../../api/medusa-product";
+import settingsRequests from "../../api/settings";
 
 const HomePage = () => {
   const [productsData, setProductsData] = React.useState<null | Record<string, any>>(null)
   const [isLoading, setIsLoading] = React.useState(true)
+  const [pluginSettings, setPluginSettings] = React.useState(null)
+
+  const getPluginSettings = async () => {
+    setPluginSettings(await settingsRequests.getSettings())
+  }
 
   const fetchData = async () => {
     if(isLoading === false) setIsLoading(true)
@@ -24,11 +30,20 @@ const HomePage = () => {
   }
 
   React.useEffect(() => {
+    const get = async () => {
+      await getPluginSettings()
+    };
+
     const fetch = async () => {
       await fetchData()
     };
 
-   fetch().then();
+    get().then(
+      () => {
+        pluginSettings?.medusaServerBaseUrl !== null && pluginSettings?.medusaServerBaseUrl !== '' ? fetch().then() : setIsLoading(false)
+      }
+    )
+
   }, []);
 
   if(isLoading) return <LoadingIndicatorPage />
@@ -41,8 +56,14 @@ const HomePage = () => {
         as={'h2'}
       />
       <ContentLayout>
+        {!pluginSettings?.medusaServerBaseUrl && (
+          <EmptyStateLayout
+            icon={<Illo />}
+            content={"There is no medusa API URL. Please set it inside the Plugin Settings Page."}
+          />
+        )}
         {
-          !productsData || productsData?.products?.length === 0
+          pluginSettings?.medusaServerBaseUrl && (!productsData || productsData?.products?.length === 0)
             ? (
               <EmptyStateLayout
               icon={<Illo />}
@@ -50,12 +71,16 @@ const HomePage = () => {
             />
             ) : (
               <ProductList>
-                {productsData?.products.map((_, idx) => (
-                  <ProductCard
-                    title={'Product'}
-                    subtitle={'100% cool'}
-                  />
-                ))}
+                {productsData?.products.map((product) => {
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      title={product.title}
+                      subtitle={`${product.description.replace( /(<([^>]+)>)/ig, '').slice(0, 80)}...`}
+                      imageSrc={product.thumbnail}
+                    />
+                  );
+                })}
               </ProductList>
             )
         }

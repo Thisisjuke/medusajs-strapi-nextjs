@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   Box,
   GridLayout,
-  Typography
 } from '@strapi/design-system'
 
 export const ProductList = ({children}) => {

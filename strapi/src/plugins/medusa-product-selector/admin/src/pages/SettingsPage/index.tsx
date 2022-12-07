@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import settingsRequests from '../../api/settings';
 
-import { Box, Stack, Button, Grid, GridItem, HeaderLayout, ContentLayout, Typography, TextInput, Information, Tooltip } from '@strapi/design-system';
+import { Box, Stack, Button, Grid, GridItem, HeaderLayout, ContentLayout, TextInput } from '@strapi/design-system';
 import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin';
 import {Check} from '@strapi/icons';
 

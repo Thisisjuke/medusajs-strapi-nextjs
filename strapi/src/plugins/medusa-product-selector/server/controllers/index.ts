@@ -1,7 +1,7 @@
-import productReferenceController from './product-reference';
+import pageController from './page';
 import medusaProductsController from './medusa-products';
 
 export default {
-  productReference: productReferenceController,
+  page: pageController,
   medusaProducts: medusaProductsController,
 };
