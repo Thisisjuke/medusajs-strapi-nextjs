@@ -1,11 +1,58 @@
 import * as React from 'react';
+// @ts-ignore
+import pluginPkg from '../../package.json'
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginId from './pluginId';
+import getTrad from './utils/getTrad';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
+import ProductIcon from "./components/ProductIcon";
+
+const name = pluginPkg.strapi.name;
 
 export default {
   register(app) {
+    app.customFields.register({
+      name: "products",
+      pluginId: pluginId,
+      type: "string",
+      intlLabel: {
+        id: getTrad('medusa-product-selector.label'),
+        defaultMessage: 'Country',
+      },
+      intlDescription: {
+        id: getTrad('medusa-product-selector.description'),
+        defaultMessage: 'Select any country',
+      },
+      icon: ProductIcon,
+      components: {
+        Input: async () => import("./components/ProductSelector"),
+      },
+      options: {
+        advanced: [
+          {
+            sectionTitle: {
+              id: 'global.settings',
+              defaultMessage: 'Settings',
+            },
+            items: [
+              {
+                name: 'required',
+                type: 'checkbox',
+                intlLabel: {
+                  id: 'form.attribute.item.requiredField',
+                  defaultMessage: 'Required field',
+                },
+                description: {
+                  id: 'form.attribute.item.requiredField.description',
+                  defaultMessage: "You won't be able to create an entry if this field is empty",
+                },
+              },
+            ],
+          },
+        ],
+      },
+    }),
     app.createSettingSection(
       {
         id: pluginId,

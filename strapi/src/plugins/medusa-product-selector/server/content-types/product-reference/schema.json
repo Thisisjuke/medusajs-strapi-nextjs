@@ -15,12 +15,13 @@
       "visible": true
     },
     "content-type-builder": {
-      "visible": false
+      "visible": true
     }
   },
   "attributes": {
-    "name": {
-      "type": "string"
+    "productIds": {
+      "type": "customField",
+      "customField": "plugin::medusa-product-selector.products"
     }
   }
 }
