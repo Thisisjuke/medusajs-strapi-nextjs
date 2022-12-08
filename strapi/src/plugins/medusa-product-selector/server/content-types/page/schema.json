@@ -31,7 +31,8 @@
     "blocks": {
       "type": "dynamiczone",
       "components": [
-        "block.headings-block"
+        "block.headings-block",
+        "block.cta-image-block"
       ],
       "min": 1
     }

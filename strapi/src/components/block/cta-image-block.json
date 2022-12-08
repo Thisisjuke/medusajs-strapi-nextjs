@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_block_cta_image_blocks",
+  "info": {
+    "displayName": "CtaImageBlock",
+    "icon": "link",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "richtext"
+    },
+    "ctaText": {
+      "type": "string"
+    },
+    "ctaUrl": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    }
+  }
+}

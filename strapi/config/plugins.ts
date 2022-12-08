@@ -1,6 +1,11 @@
 export default {
   'medusa-product-selector': {
     enabled: true,
-    resolve: './src/plugins/medusa-product-selector' // path to plugin folder
+    resolve: './src/plugins/medusa-product-selector'
+  },
+  'strapi-plugin-populate-deep': {
+    config: {
+      defaultDepth: 5
+    }
   },
 }

@@ -1,5 +1,25 @@
 version: "3.8"
 services:
+  nextjs:
+    user: "${UID}:${GID}"
+    build:
+      context: ./nextjs
+      dockerfile: Dockerfile
+    image: nextjs:18
+    container_name: nextjs
+    depends_on:
+      - medusa-api
+      - strapi
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nextjs:/app/
+    environment:
+      MEDUSA_BACKEND_URL: ${MEDUSA_BACKEND_URL}
+      STRAPI_BACKEND_URL: ${STRAPI_BACKEND_URL}
+    networks:
+      - stack
+
   strapi:
     user: "${UID}:${GID}"
     container_name: strapi

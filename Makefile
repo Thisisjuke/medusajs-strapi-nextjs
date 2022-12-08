@@ -18,3 +18,6 @@ restart-medusa:
 
 restart-strapi:
 	docker-compose restart strapi
+
+restart-next:
+	docker-compose restart nextjs

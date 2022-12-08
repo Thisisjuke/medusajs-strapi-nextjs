@@ -12,6 +12,12 @@
     },
     "title": {
       "type": "richtext"
+    },
+    "ctaUrl": {
+      "type": "string"
+    },
+    "ctaText": {
+      "type": "string"
     }
   }
 }

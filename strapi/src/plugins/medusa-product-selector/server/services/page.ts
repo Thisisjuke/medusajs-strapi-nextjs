@@ -12,9 +12,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         },
       },
     })
+
     return await strapi.db.query('plugin::medusa-product-selector.page').findMany({
       ...filters,
-      populate: ['blocks']
+      populate: ['deep']
     })
   },
   async findWithNoProducts(query) {
@@ -27,7 +28,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     })
     return await strapi.db.query('plugin::medusa-product-selector.page').findMany({
       ...filters,
-      populate: ['blocks']
+      populate: ['deep']
     })
   },
 });
