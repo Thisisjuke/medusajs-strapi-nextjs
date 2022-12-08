@@ -19,6 +19,11 @@
     }
   },
   "attributes": {
+    "name": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
     "productIds": {
       "type": "customField",
       "customField": "plugin::medusa-product-selector.products"
