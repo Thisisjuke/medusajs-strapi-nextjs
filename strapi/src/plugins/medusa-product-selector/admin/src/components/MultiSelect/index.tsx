@@ -24,7 +24,7 @@ export const MultiSelect = React.forwardRef((props:any, ref) => {
       multi
     >
       {options?.map(({ title, id }) => (
-        <Option disabled value={id} key={`option_${id}`}>
+        <Option value={id} key={`option_${id}`}>
             {title}
         </Option>
       ))}
