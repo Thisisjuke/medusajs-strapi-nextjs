@@ -3,13 +3,14 @@ import {
   BaseHeaderLayout,
   ContentLayout,
   EmptyStateLayout,
-  Layout
+  Layout,
+  GridLayout,
+  Box
 } from '@strapi/design-system'
 import { LoadingIndicatorPage } from '@strapi/helper-plugin'
 
 import {Illo} from "../../components/Illo";
-import {ProductList} from "../../components/ProductList";
-import {ProductCard} from "../../components/ProductCard";
+import {ProductCard} from "../../components/Popup-Product/ProductCard";
 import medusaProductsRequests from "../../api/medusa-product";
 import settingsRequests from "../../api/settings";
 
@@ -70,18 +71,19 @@ const HomePage = () => {
               content={'There is no published products coming for your Medusa Ecommerce.'}
             />
             ) : (
-              <ProductList>
+              <GridLayout>
                 {productsData?.products.map((product) => {
                   return (
-                    <ProductCard
-                      key={product.id}
-                      title={product.title}
-                      subtitle={`${product.description.replace( /(<([^>]+)>)/ig, '').slice(0, 80)}...`}
-                      imageSrc={product.thumbnail}
-                    />
+                    <Box padding={4} hasRadius background="neutral0" key={product.id} shadow="tableShadow">
+                      <ProductCard
+                        title={product.title}
+                        subtitle={`${product.description.replace( /(<([^>]+)>)/ig, '').slice(0, 80)}...`}
+                        imageSrc={product.thumbnail}
+                      />
+                    </Box>
                   );
                 })}
-              </ProductList>
+              </GridLayout>
             )
         }
       </ContentLayout>
