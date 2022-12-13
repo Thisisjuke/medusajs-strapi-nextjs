@@ -9,6 +9,8 @@ import {Illo} from "../Illo";
 import {MultiSelect} from "../MultiSelect";
 import {PopupHeader} from "../Popup-Product/PopupHeader";
 import {ClosePopup} from "../Popup-Product/ClosePopup";
+import { useIntl } from 'react-intl'
+import getTrad from "../../utils/getTrad";
 
 const ProductSelector = (props) => {
   const {
@@ -20,6 +22,7 @@ const ProductSelector = (props) => {
 
   const val = value ? JSON.parse(value) : []
 
+  const { formatMessage } = useIntl();
   const { register, watch, reset } = useForm({defaultValues: {'product-selected': []}});
 
   const [productsData, setProductsData] = React.useState<null | Record<string, any>>(null)
@@ -60,14 +63,22 @@ const ProductSelector = (props) => {
           <MultiSelect
             {...register('product-selected')}
             setSearchValue={setSearchValue}
-            intlLabel={''}
+            label={formatMessage({
+              id: getTrad('products-input.label')
+            })}
             description={''}
-            placeholder={'icccccciii'}
+            placeholder={formatMessage({
+              id: getTrad('products-input.placeholder')
+            })}
             options={productsData?.products}
             value={selectedProducts}
           />
         </div>
-        <Button size={'L'} onClick={() => setIsDetailsVisible(prev => !prev)}>Open detailed View</Button>
+        <Button size={'L'} onClick={() => setIsDetailsVisible(prev => !prev)}>
+          {formatMessage({
+            id: getTrad('products-input.cta')
+          })}
+        </Button>
       </section>
       <Modal
         isOpen={isDetailsVisible}

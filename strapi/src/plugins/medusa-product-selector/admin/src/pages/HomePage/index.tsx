@@ -8,13 +8,17 @@ import {
   Box
 } from '@strapi/design-system'
 import { LoadingIndicatorPage } from '@strapi/helper-plugin'
+import { useIntl } from 'react-intl'
 
 import {Illo} from "../../components/Illo";
 import {ProductCard} from "../../components/Popup-Product/ProductCard";
 import medusaProductsRequests from "../../api/medusa-product";
 import settingsRequests from "../../api/settings";
+import getTrad from "../../utils/getTrad";
 
 const HomePage = () => {
+  const { formatMessage } = useIntl();
+
   const [productsData, setProductsData] = React.useState<null | Record<string, any>>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [pluginSettings, setPluginSettings] = React.useState(null)
@@ -52,15 +56,21 @@ const HomePage = () => {
   return (
     <Layout>
       <BaseHeaderLayout
-        title={'Medusa Products'}
-        subtitle={'See all your published products.'}
+        title={formatMessage({
+          id: getTrad('list-page.title')
+        })}
+        subtitle={formatMessage({
+          id: getTrad('list-page.subtitle')
+        })}
         as={'h2'}
       />
       <ContentLayout>
         {!pluginSettings?.medusaServerBaseUrl && (
           <EmptyStateLayout
             icon={<Illo />}
-            content={"There is no medusa API URL. Please set it inside the Plugin Settings Page."}
+            content={formatMessage({
+              id: getTrad('list-page.no-url')
+            })}
           />
         )}
         {
@@ -68,7 +78,9 @@ const HomePage = () => {
             ? (
               <EmptyStateLayout
               icon={<Illo />}
-              content={'There is no published products coming for your Medusa Ecommerce.'}
+              content={formatMessage({
+                id: getTrad('list-page.empty')
+              })}
             />
             ) : (
               <GridLayout>

@@ -17,54 +17,30 @@ export default {
       pluginId: pluginId,
       type: "string",
       intlLabel: {
-        id: getTrad('medusa-product-selector.label'),
-        defaultMessage: 'Country',
+        id: getTrad('plugin.name'),
+        defaultMessage: 'Medusa Products Selector',
       },
       intlDescription: {
-        id: getTrad('medusa-product-selector.description'),
-        defaultMessage: 'Select any country',
+        id: getTrad('plugin.description'),
+        defaultMessage: 'Link products coming from MedusaJS',
       },
       icon: ProductIcon,
       components: {
         Input: async () => import("./components/ProductSelector"),
-      },
-      options: {
-        advanced: [
-          {
-            sectionTitle: {
-              id: 'global.settings',
-              defaultMessage: 'Settings',
-            },
-            items: [
-              {
-                name: 'required',
-                type: 'checkbox',
-                intlLabel: {
-                  id: 'form.attribute.item.requiredField',
-                  defaultMessage: 'Required field',
-                },
-                description: {
-                  id: 'form.attribute.item.requiredField.description',
-                  defaultMessage: "You won't be able to create an entry if this field is empty",
-                },
-              },
-            ],
-          },
-        ],
       },
     }),
     app.createSettingSection(
       {
         id: pluginId,
         intlLabel: {
-          id: `${pluginId}.plugin.name`,
+          id: getTrad(`navigation.title`),
           defaultMessage: 'Medusa Products',
         },
       },
       [
         {
           intlLabel: {
-            id: `${pluginId}.plugin.name`,
+            id: getTrad(`settings-page.navigation`),
             defaultMessage: 'API Settings',
           },
           id: 'settings',
@@ -79,7 +55,7 @@ export default {
       to: `/plugins/${pluginId}`,
       icon: PluginIcon,
       intlLabel: {
-        id: `${pluginId}.plugin.name`,
+        id: getTrad(`navigation.title`),
         defaultMessage: 'Medusa Products',
       },
       Component: async () => {
