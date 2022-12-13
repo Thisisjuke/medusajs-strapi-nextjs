@@ -7,10 +7,10 @@
   },
   "options": {},
   "attributes": {
-    "subtitle": {
+    "title": {
       "type": "richtext"
     },
-    "title": {
+    "subtitle": {
       "type": "richtext"
     },
     "ctaUrl": {

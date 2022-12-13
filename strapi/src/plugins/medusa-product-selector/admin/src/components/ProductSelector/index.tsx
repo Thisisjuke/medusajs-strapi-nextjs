@@ -96,14 +96,20 @@ const ProductSelector = (props) => {
         }>
         <Box background={"neutral100"}>
             <>
-              <ClosePopup closeModal={() => setIsDetailsVisible(false)} />
+              <ClosePopup closeModal={(e) => {
+                document.body.style.overflowY = 'auto'
+                setIsDetailsVisible(false)
+              }} />
               <PopupHeader
                 productsData={productsData}
                 refetch={fetchData}
                 setSearch={setSearchValue}
                 resetForm={reset}
                 selectedProducts={selectedProducts}
-                closeModal={() => setIsDetailsVisible(false)}
+                closeModal={(e) => {
+                  document.body.style.overflowY = 'auto'
+                  setIsDetailsVisible(false)
+                }}
               />
               <ContentLayout>
                 {isLoading ? (

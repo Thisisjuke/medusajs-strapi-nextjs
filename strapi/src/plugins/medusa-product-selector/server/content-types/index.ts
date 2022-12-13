@@ -1,5 +1,7 @@
-import page from './page'
+import pageSchema from './page'
+import templateSchema from './template'
 
 export default {
-  'page': page
+  'page': pageSchema,
+  'template': templateSchema
 };
