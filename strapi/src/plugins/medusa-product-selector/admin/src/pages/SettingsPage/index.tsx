@@ -1,12 +1,15 @@
 import * as React from 'react';
 
-import settingsRequests from '../../api/settings';
-
 import { Box, Stack, Button, Grid, GridItem, HeaderLayout, ContentLayout, TextInput } from '@strapi/design-system';
 import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin';
 import {Check} from '@strapi/icons';
+import { useIntl } from 'react-intl'
+import getTrad from "../../utils/getTrad";
+import settingsRequests from '../../api/settings';
 
 const Settings = () => {
+  const { formatMessage } = useIntl();
+
   const [settings, setSettings] = React.useState(null);
   const [isSaving, setIsSaving] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -32,12 +35,12 @@ const Settings = () => {
   const handleSubmit = async () => {
     setIsSaving(true);
     const res = await settingsRequests.setSettings(settings);
-    console.log(res)
-    //setSettings(res.data.settings);
     setIsSaving(false);
     toggleNotification({
       type: 'success',
-      message: 'Settings successfully updated',
+      message: formatMessage({
+        id: getTrad('settings-page.validation-message')
+      }),
     });
   };
 
@@ -55,8 +58,12 @@ const Settings = () => {
     <>
       <HeaderLayout
         id="title"
-        title="Medusa Product Selector - API Settings"
-        subtitle="Manage the settings about your Medusa Server."
+        title={formatMessage({
+          id: getTrad('settings-page.title')
+        })}
+        subtitle={formatMessage({
+          id: getTrad('settings-page.subtitle')
+        })}
         primaryAction={
           <Button
             onClick={handleSubmit}
@@ -65,7 +72,9 @@ const Settings = () => {
             disabled={isSaving}
             loading={isSaving}
           >
-            Save
+            {formatMessage({
+              id: getTrad('settings-page.cta')
+            })}
           </Button>
         }
       />
@@ -83,12 +92,16 @@ const Settings = () => {
             <Grid gap={6}>
               <GridItem col={12} s={12}>
                 <TextInput
-                  placeholder="http://localhost:8000"
-                  label="Backend URL:"
                   name="medusaServerBaseUrl"
-                  hint={<span>Enter the URL of your Medusa API to fetch products. It can be loaded from <u>MEDUSA_SERVER_BASE_URL</u> environment variable.</span>}
+                  placeholder="http://localhost:8000"
+                  label={formatMessage({
+                    id: getTrad('settings-page.input-label')
+                  })}
+                  hint={formatMessage({
+                    id: getTrad('settings-page.input-hint')
+                  })}
                   disabled={settings.isLoadedFromConfig}
-                  error={!settings.medusaServerBaseUrl ? "Can't be empty." : undefined}
+                  error={!settings.medusaServerBaseUrl ? formatMessage({id: getTrad('settings-page.error-message')}) : undefined}
                   onChange={e => updateSettingsValue('medusaServerBaseUrl', e.target.value)}
                   defaultValue={settings.medusaServerBaseUrl}
                   value={settings.isLoadedFromConfig ? settings.medusaServerBaseUrl : undefined}

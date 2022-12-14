@@ -8,7 +8,8 @@
     "kind": "plugin"
   },
   "dependencies": {
-    "react-hook-form": "^7.40.0"
+    "react-hook-form": "^7.40.0",
+    "react-modal": "^3.16.1"
   },
   "devDependencies": {
     "typescript": "4.6.3"

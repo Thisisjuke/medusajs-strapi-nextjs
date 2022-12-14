@@ -43,7 +43,7 @@ const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
 const plugins = [
   `medusa-fulfillment-manual`,
   `medusa-payment-manual`,
-	{
+	/*{
 		resolve: 'medusa-source-shopify-json',
 		options: {
 			json:{
@@ -53,7 +53,7 @@ const plugins = [
 				collects_path: './schemas/collects.json',
 			},
 		}
-	},
+	},*/
   // Uncomment to add Stripe support.
   // You can create a Stripe account via: https://stripe.com
   // {

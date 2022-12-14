@@ -44,6 +44,7 @@ export const ProductCard = ({title, subtitle, badge, imageSrc, displayCheck, val
       <CardHeader>
         {imageSrc && <CardAsset style={{pointerEvents: 'none', userSelect: 'none'}} src={imageSrc} />}
         {displayCheck && <input
+          {...register("product-selected")}
           style={{
             cursor: 'pointer',
             position: "absolute",
@@ -54,7 +55,6 @@ export const ProductCard = ({title, subtitle, badge, imageSrc, displayCheck, val
           type={"checkbox"}
           value={value}
           defaultChecked={defaultChecked}
-          {...register("isCardSelected")}
         />}
       </CardHeader>
       <CardBody>

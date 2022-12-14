@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "page",
+  "collectionName": "templates",
   "info": {
-    "singularName": "page",
-    "pluralName": "pages",
-    "displayName": "Page"
+    "singularName": "template",
+    "pluralName": "templates",
+    "displayName": "Template"
   },
   "options": {
     "draftAndPublish": true,
@@ -24,23 +24,20 @@
       "unique": true,
       "required": true
     },
-    "productIds": {
-      "type": "customField",
-      "customField": "plugin::medusa-product-selector.products"
-    },
     "blocks": {
       "type": "dynamiczone",
       "components": [
-        "block.headings-block",
-        "block.cta-image-block"
+        "block.cta-image-block",
+        "block.headings-block"
       ],
+      "required": true,
       "min": 1
     },
-    "template": {
+    "page": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "plugin::medusa-product-selector.template",
-      "mappedBy": "page"
+      "relation": "manyToOne",
+      "target": "plugin::medusa-product-selector.page",
+      "inversedBy": "template"
     }
   }
 }
