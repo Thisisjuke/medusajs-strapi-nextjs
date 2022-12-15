@@ -9,48 +9,44 @@ const getPluginStore = () => {
   });
 }
 
-const createDefaultConfig = async () => {
-  const pluginStore = getPluginStore();
-  const value = {
-    medusaServerBaseUrl: process.env.MEDUSA_SERVER_BASE_URL || null,
-    isLoadedFromConfig: !!process.env.MEDUSA_SERVER_BASE_URL
-  };
-  await pluginStore.set({ key: 'settings', value });
-
-  return pluginStore.get({ key: 'settings' });
-}
-
 export default ({ strapi }: { strapi: Strapi }) => ({
   async find() {
     const pluginStore = getPluginStore();
     const config = await pluginStore.get({ key: 'settings' });
 
-    console.log(config.medusaServerBaseUrl)
-
     const medusa = new Medusa({ baseUrl: config.medusaServerBaseUrl, maxRetries: 3 })
-    const products = await medusa.products.list()
-    const { response, ...data } = products;
+    const productsList = await medusa.products.list()
+    const { response, ...data } = productsList;
 
     return data
   },
-  async getSettings() {
+  async findAllWithStatus() {
     const pluginStore = getPluginStore();
-    let config = await pluginStore.get({ key: 'settings' });
-    if (!config) {
-      config = await createDefaultConfig();
+    const config = await pluginStore.get({ key: 'settings' });
+
+    const medusa = new Medusa({ baseUrl: config.medusaServerBaseUrl, maxRetries: 3 })
+    const productsList = await medusa.products.list()
+    const { response, ...data } = productsList;
+
+    const products = []
+
+    for (const product of data?.products) {
+      let obj = product as any
+      const data = await strapi.db.query('plugin::medusa-product-selector.page').findOne({
+        where: {
+          productIds: {
+            $contains: product?.id,
+          },
+        },
+      })
+      if (data !== null) {
+        obj = {...product, isAlreadyUsed: data.id}
+      }
+      products.push(obj)
     }
 
-    return config;
-  },
-  async setSettings(settings) {
-    const value = settings;
-    const pluginStore = getPluginStore();
-    const config = pluginStore.get({ key: 'settings', value })
-    if(config.isLoadedFromConfig){
-      return config
-    }
-    await pluginStore.set({ key: 'settings', value });
+    data.products = products
 
-    return pluginStore.get({ key: 'settings' });
-  },
+    return data
+  }
 });

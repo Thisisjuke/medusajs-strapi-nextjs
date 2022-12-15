@@ -11,6 +11,7 @@ import {PopupHeader} from "../Popup-Product/PopupHeader";
 import {ClosePopup} from "../Popup-Product/ClosePopup";
 import { useIntl } from 'react-intl'
 import getTrad from "../../utils/getTrad";
+import {Option} from "../MultiSelect/Option";
 
 const ProductSelector = (props) => {
   const {
@@ -25,6 +26,7 @@ const ProductSelector = (props) => {
   const { formatMessage } = useIntl();
   const { register, watch, reset } = useForm({defaultValues: {'product-selected': []}});
 
+  const [resourceId, setResourceId] = React.useState(null)
   const [productsData, setProductsData] = React.useState<null | Record<string, any>>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [isDetailsVisible, setIsDetailsVisible] = React.useState(false);
@@ -34,12 +36,13 @@ const ProductSelector = (props) => {
 
   const fetchData = async () => {
     if(isLoading === false) setIsLoading(true)
-    const medusaProducts = await medusaProductsRequests.getAllMedusaProducts()
+    const medusaProducts = await medusaProductsRequests.getAllMedusaProductsWithStatus()
     setProductsData(medusaProducts)
     setIsLoading(false)
   }
 
   React.useEffect(() => {
+    setResourceId(window.location.href.split("/").pop())
     const fetch = async () => {
       await fetchData()
     };
@@ -70,9 +73,14 @@ const ProductSelector = (props) => {
             placeholder={formatMessage({
               id: getTrad('products-input.placeholder')
             })}
-            options={productsData?.products}
             value={selectedProducts}
-          />
+          >
+            {productsData?.products?.map(({ title, id, isAlreadyUsed }) => (
+              <Option disabled={isAlreadyUsed && isAlreadyUsed != resourceId } value={id} key={`option_${id}`}>
+                {title}
+              </Option>
+            ))}
+          </MultiSelect>
         </div>
         <Button size={'L'} onClick={() => setIsDetailsVisible(prev => !prev)}>
           {formatMessage({
@@ -94,7 +102,7 @@ const ProductSelector = (props) => {
           content: {padding: 0, height: '90vh', width: '90vw', maxWidth: '1600px', top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)',
           }}
         }>
-        <Box background={"neutral100"}>
+        <Box background={"neutral100"} style={{height: '100%'}}>
             <>
               <ClosePopup closeModal={(e) => {
                 document.body.style.overflowY = 'auto'
@@ -125,6 +133,7 @@ const ProductSelector = (props) => {
                 ) : (
                   <GridLayout>
                     {productsData?.products.map(product => {
+                      console.log(product.isAlreadyUsed)
                       return (product.title.includes(searchValue) || product.description.includes(searchValue) ?
                           (<Box
                             style={{gridTemplateColumns: 'repeat(3, minmax(0, 1fr)'}}
@@ -141,6 +150,7 @@ const ProductSelector = (props) => {
                               value={product.id}
                               register={register}
                               imageSrc={product.thumbnail}
+                              disabled={product.isAlreadyUsed && product.isAlreadyUsed != resourceId }
                               displayCheck
                             />
                           </Box>) : null
