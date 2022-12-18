@@ -6,7 +6,7 @@ import pluginId from './pluginId';
 import getTrad from './utils/getTrad';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
-import ProductIcon from "./components/Popup-Product/ProductIcon";
+import ProductIcon from "./components/Popup/ProductIcon";
 
 const name = pluginPkg.strapi.name;
 

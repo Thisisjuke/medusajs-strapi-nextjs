@@ -11,7 +11,7 @@ import { LoadingIndicatorPage } from '@strapi/helper-plugin'
 import { useIntl } from 'react-intl'
 
 import {Illo} from "../../components/Illo";
-import {ProductCard} from "../../components/Popup-Product/ProductCard";
+import {ProductCard} from "../../components/Popup/ProductCard";
 import medusaProductsRequests from "../../api/medusa-product";
 import settingsRequests from "../../api/settings";
 import getTrad from "../../utils/getTrad";

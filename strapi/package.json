@@ -13,9 +13,9 @@
   "devDependencies": {},
   "dependencies": {
     "@medusajs/medusa-js": "^1.3.3",
-    "@strapi/plugin-i18n": "4.5.3",
-    "@strapi/plugin-users-permissions": "4.5.3",
-    "@strapi/strapi": "4.5.3",
+    "@strapi/plugin-i18n": "4.5.4",
+    "@strapi/plugin-users-permissions": "4.5.4",
+    "@strapi/strapi": "4.5.4",
     "pg": "8.6.0",
     "strapi-plugin-populate-deep": "^1.1.2"
   },

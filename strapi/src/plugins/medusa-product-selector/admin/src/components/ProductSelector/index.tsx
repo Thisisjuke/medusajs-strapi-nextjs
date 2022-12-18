@@ -4,11 +4,11 @@ import Modal from 'react-modal';
 
 import { Box, Loader, Button, ContentLayout, EmptyStateLayout, GridLayout } from '@strapi/design-system';
 import medusaProductsRequests from "../../api/medusa-product";
-import {ProductCard} from "../Popup-Product/ProductCard";
+import {ProductCard} from "../Popup/ProductCard";
 import {Illo} from "../Illo";
 import {MultiSelect} from "../MultiSelect";
-import {PopupHeader} from "../Popup-Product/PopupHeader";
-import {ClosePopup} from "../Popup-Product/ClosePopup";
+import {PopupHeader} from "../Popup/PopupHeader";
+import {ClosePopup} from "../Popup/ClosePopup";
 import { useIntl } from 'react-intl'
 import getTrad from "../../utils/getTrad";
 import {Option} from "../MultiSelect/Option";

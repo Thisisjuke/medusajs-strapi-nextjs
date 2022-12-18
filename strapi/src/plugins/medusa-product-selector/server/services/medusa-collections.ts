@@ -10,13 +10,13 @@ const getPluginStore = () => {
 }
 
 export default ({ strapi }: { strapi: Strapi }) => ({
-  async find() {
+  async findAll() {
     const pluginStore = getPluginStore();
     const config = await pluginStore.get({ key: 'settings' });
 
     const medusa = new Medusa({ baseUrl: config.medusaServerBaseUrl, maxRetries: 3 })
-    const products = await medusa.products.list()
-    const { response, ...data } = products;
+    const productsList = await medusa.collections.list()
+    const { response, ...data } = productsList;
 
     return data
   },
