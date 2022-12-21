@@ -7,11 +7,20 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     })
   },
   async findTemplateForCollection(query) {
-    return await strapi.db.query('plugin::medusa-product-selector.template').findMany({
+    return await strapi.db.query('plugin::medusa-product-selector.template').findOne({
       where: {
-        collectionIds: {
-          $contains: query?.id,
-        },
+        $and: [
+          {
+            page: {
+              collectionIds: {
+                $contains: query?.id,
+              },
+            }
+          },
+          {
+            publishedAt: { $notNull: true },
+          },
+        ],
       },
       populate: ['deep']
     })

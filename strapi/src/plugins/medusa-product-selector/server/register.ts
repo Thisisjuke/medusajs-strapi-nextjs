@@ -6,4 +6,9 @@ export default ({ strapi }: { strapi: Strapi }) => {
     plugin: 'medusa-product-selector',
     type: 'string',
   });
+  strapi.customFields.register({
+    name: 'collections',
+    plugin: 'medusa-product-selector',
+    type: 'string',
+  });
 };

@@ -8,4 +8,13 @@ export default [
       auth: false
     },
   },
+  {
+    method: 'GET',
+    path: '/collections/status',
+    handler: 'medusaCollections.findAllWithStatus',
+    config: {
+      policies: [],
+      auth: false
+    },
+  },
 ]

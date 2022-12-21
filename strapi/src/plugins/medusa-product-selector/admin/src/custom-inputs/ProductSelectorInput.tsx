@@ -3,17 +3,17 @@ import { useForm } from "react-hook-form";
 import Modal from 'react-modal';
 
 import { Box, Loader, Button, ContentLayout, EmptyStateLayout, GridLayout } from '@strapi/design-system';
-import medusaProductsRequests from "../../api/medusa-product";
-import {ProductCard} from "../Popup/ProductCard";
-import {Illo} from "../Illo";
-import {MultiSelect} from "../MultiSelect";
-import {PopupHeader} from "../Popup/PopupHeader";
-import {ClosePopup} from "../Popup/ClosePopup";
+import medusaProductsRequests from "../api/medusa-product";
+import {ProductCard} from "../components/Popup/ProductCard";
+import {Illo} from "../components/Illo";
+import {MultiSelect} from "../components/MultiSelect";
+import {PopupHeader} from "../components/Popup/PopupHeader";
+import {ClosePopup} from "../components/Popup/ClosePopup";
 import { useIntl } from 'react-intl'
-import getTrad from "../../utils/getTrad";
-import {Option} from "../MultiSelect/Option";
+import getTrad from "../utils/getTrad";
+import {Option} from "../components/MultiSelect/Option";
 
-const ProductSelector = (props) => {
+const ProductSelectorInput = (props) => {
   const {
     attribute,
     name: inputName,
@@ -33,6 +33,8 @@ const ProductSelector = (props) => {
 
   const [selectedProducts, setSelectedProducts] = React.useState(val)
   const [searchValue, setSearchValue] = React.useState('');
+
+  const mutateSearch = (val:string) => setSearchValue(val.toLowerCase())
 
   const fetchData = async () => {
     if(isLoading === false) setIsLoading(true)
@@ -111,7 +113,7 @@ const ProductSelector = (props) => {
               <PopupHeader
                 productsData={productsData}
                 refetch={fetchData}
-                setSearch={setSearchValue}
+                setSearch={mutateSearch}
                 resetForm={reset}
                 selectedProducts={selectedProducts}
                 closeModal={(e) => {
@@ -133,8 +135,7 @@ const ProductSelector = (props) => {
                 ) : (
                   <GridLayout>
                     {productsData?.products.map(product => {
-                      console.log(product.isAlreadyUsed)
-                      return (product.title.includes(searchValue) || product.description.includes(searchValue) ?
+                      return (product.title.toLowerCase().includes(searchValue) || product.description.toLowerCase().includes(searchValue) ?
                           (<Box
                             style={{gridTemplateColumns: 'repeat(3, minmax(0, 1fr)'}}
                             padding={4}
@@ -166,4 +167,4 @@ const ProductSelector = (props) => {
   );
 }
 
-export default ProductSelector
+export default ProductSelectorInput

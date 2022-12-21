@@ -1,49 +1,29 @@
 import { Strapi } from '@strapi/strapi';
-import Medusa from "@medusajs/medusa-js";
-
-const getPluginStore = () => {
-  return strapi.store({
-    environment: '',
-    type: 'plugin',
-    name: 'medusa-product-selector',
-  });
-}
+import {useMedusaClient} from "../utils/useMedusaClient";
 
 export default ({ strapi }: { strapi: Strapi }) => ({
   async findAll(query) {
     return await strapi.entityService.findMany('plugin::medusa-product-selector.page', query)
   },
   async findWithId(query) {
-    /*
-    - available blocks in strapi ?
-      - yes
-        - linked to a template ?
-          - yes
-            - has blocks ?
-              - yes : return blocks
-              - no : return template
-          - no
-            - return blocks or empty
-      - no
-        - is this product_id in a collection
-          - yes
-          - linked to a template ?
-            - yes
-              - has blocks ?
-                - yes : return blocks
-                - no : return template
-            - no
-              - return blocks or empty
-          - no : return empty
-     */
     const productId = query?.id
 
     if(!productId) return([])
 
     const filters = productId && ({
-      where: {productIds: {
-        $contains: query?.id,
-    }}})
+      where: {
+        $and: [
+          {
+            productIds: {
+              $contains: query?.id,
+            }
+          },
+          {
+            publishedAt: { $notNull: true },
+          },
+        ],
+      }
+    })
 
     const relativePage = await strapi.db.query('plugin::medusa-product-selector.page').findOne({
       ...filters,
@@ -51,33 +31,37 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     })
 
     if(relativePage && relativePage?.blocks?.length > 0){
-      console.log('has relative page and blocks',relativePage)
+      return(relativePage?.blocks)
     }
 
-    const pluginStore = getPluginStore();
-    const config = await pluginStore.get({ key: 'settings' });
+    const medusa = await useMedusaClient()
+    const { product: {collection_id} } = await medusa.products.retrieve(productId)
 
-    const medusa = new Medusa({ baseUrl: config.medusaServerBaseUrl, maxRetries: 3 })
+    const relativeTemplate = await strapi.plugin('medusa-product-selector').service('templates').findTemplateForCollection({id: collection_id})
 
-    const { product: {collection_id} } = await medusa.products.retrieve(productId) as any
-
-    const template = await strapi.plugin('medusa-product-selector').service('templates').findTemplateForCollection({id: collection_id})
-    console.log('template', template)
-
-    if(template && template?.blocks?.length > 0){
-      console.log('has collection template and this template has blocks',relativePage)
+    if(relativeTemplate && relativeTemplate?.page?.block?.length > 0){
+      return relativeTemplate?.page?.block?.length
     }
 
-    console.log(collection_id)
+    if(relativeTemplate && relativeTemplate?.blocks?.length > 0){
+      return relativeTemplate?.blocks
+    }
 
     return []
   },
   async findWithNoProducts(query) {
     const filters = query?.id && ({
       where: {
-        productIds: {
-          $null: true,
-        },
+        $and: [
+          {
+            productIds: {
+              $null: true,
+            },
+          },
+          {
+            publishedAt: { $notNull: true },
+          },
+        ],
       },
     })
     return await strapi.db.query('plugin::medusa-product-selector.page').findMany({

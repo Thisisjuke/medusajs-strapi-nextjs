@@ -23,5 +23,7 @@
   "products-input-modal.validate-cta": "Valider",
   "products-input-modal.refetch-cta": "Actualiser les produits",
   "products-input-modal.products-selected": "produits(s) sélectionné(s).",
-  "products-input-modal.search-placeholder": "Ex.: sac à dos jaune"
+  "products-input-modal.search-placeholder": "Ex.: sac à dos jaune",
+  "collection-input.label": "Collections à assigner:",
+  "collection-input.placeholder": "Vos collections assignées apparaissent ici."
 }
