@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import {
   Card,
   CardHeader,
@@ -19,6 +20,7 @@ interface ProductCardProps {
   displayCheck?: boolean
   defaultChecked?: boolean
   value?: string
+  disabled?: boolean
   register?: (...args) => Record<string, any>
 }
 
@@ -37,20 +39,45 @@ const Ellipsis = ({children}) => (
   </div>
 )
 
-export const ProductCard = ({title, subtitle, badge, imageSrc, displayCheck, value, register, defaultChecked }:ProductCardProps) => {
+const StyledCard = styled(Card)`
+  height: 100%;
+  ${({ disabled, theme }) => disabled && `
+    cursor: not-allowed;
+    opacity: 80%;
+    background-color: ${theme.colors.neutral100};
+  `}
+`;
+
+
+export const ProductCard = ({title, subtitle, badge, imageSrc, displayCheck, value, register, defaultChecked, disabled = false }:ProductCardProps) => {
+  const additionalProps = () => {
+    if(disabled) {
+      return {
+        onClick: e => {
+          e.preventDefault()
+          e.stopPropagation()
+        },
+      }
+    } else {
+      return register("product-selected")
+    }
+  }
 
   return(
-    <Card style={{height: '100%'}}>
+    <StyledCard disabled={disabled}>
       <CardHeader>
         {imageSrc && <CardAsset style={{pointerEvents: 'none', userSelect: 'none'}} src={imageSrc} />}
         {displayCheck && <input
-          {...register("product-selected")}
+          {...additionalProps()}
           style={{
-            cursor: 'pointer',
+            cursor: disabled ? 'not-allowed':'pointer',
             position: "absolute",
             top: '8px',
             left: '8px',
+            width: '16px',
+            height: '16px',
           }}
+          disabled={disabled}
           key={value}
           type={"checkbox"}
           value={value}
@@ -64,6 +91,6 @@ export const ProductCard = ({title, subtitle, badge, imageSrc, displayCheck, val
         </CardContent>
         {badge && <CardBadge>{badge}</CardBadge>}
       </CardBody>
-    </Card>
+    </StyledCard>
   )
 }

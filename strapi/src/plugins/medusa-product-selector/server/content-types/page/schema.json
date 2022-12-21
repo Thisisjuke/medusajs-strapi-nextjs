@@ -24,6 +24,16 @@
       "unique": true,
       "required": true
     },
+    "template": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::medusa-product-selector.template",
+      "mappedBy": "page"
+    },
+    "collectionIds": {
+      "type": "customField",
+      "customField": "plugin::medusa-product-selector.collections"
+    },
     "productIds": {
       "type": "customField",
       "customField": "plugin::medusa-product-selector.products"
@@ -35,12 +45,6 @@
         "block.cta-image-block"
       ],
       "min": 1
-    },
-    "template": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "plugin::medusa-product-selector.template",
-      "mappedBy": "page"
     }
   }
 }

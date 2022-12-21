@@ -50,7 +50,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - ./.strapi_pgsql_storage:/var/lib/postgresql
+      - strapi-postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${STRAPI_POSTGRES_USER}
       POSTGRES_PASSWORD: ${STRAPI_POSTGRES_PASSWORD}
@@ -112,7 +112,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./.medusa_pgsql_storage:/var/lib/postgresql
+      - medusa-postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${MEDUSA_POSTGRES_USER}
       POSTGRES_PASSWORD: ${MEDUSA_POSTGRES_PASSWORD}
@@ -144,3 +144,7 @@ services:
 networks:
   stack:
     driver: bridge
+
+volumes:
+  strapi-postgres:
+  medusa-postgres:

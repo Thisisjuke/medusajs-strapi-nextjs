@@ -6,12 +6,29 @@ import pluginId from './pluginId';
 import getTrad from './utils/getTrad';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
-import ProductIcon from "./components/Popup-Product/ProductIcon";
+import ProductIcon from "./components/Popup/ProductIcon";
 
 const name = pluginPkg.strapi.name;
 
 export default {
   register(app) {
+    app.customFields.register({
+      name: "collections",
+      pluginId: pluginId,
+      type: "string",
+      intlLabel: {
+        id: getTrad('plugin.aaaa'),
+        defaultMessage: 'Medusa Collections Selector',
+      },
+      intlDescription: {
+        id: getTrad('plugin.bbbb'),
+        defaultMessage: 'Link collections coming from MedusaJS',
+      },
+      icon: ProductIcon,
+      components: {
+        Input: async () => import("./custom-inputs/CollectionSelectorInput"),
+      },
+    }),
     app.customFields.register({
       name: "products",
       pluginId: pluginId,
@@ -26,7 +43,7 @@ export default {
       },
       icon: ProductIcon,
       components: {
-        Input: async () => import("./components/ProductSelector"),
+        Input: async () => import("./custom-inputs/ProductSelectorInput"),
       },
     }),
     app.createSettingSection(

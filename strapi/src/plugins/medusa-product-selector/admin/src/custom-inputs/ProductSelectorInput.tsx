@@ -3,16 +3,17 @@ import { useForm } from "react-hook-form";
 import Modal from 'react-modal';
 
 import { Box, Loader, Button, ContentLayout, EmptyStateLayout, GridLayout } from '@strapi/design-system';
-import medusaProductsRequests from "../../api/medusa-product";
-import {ProductCard} from "../Popup-Product/ProductCard";
-import {Illo} from "../Illo";
-import {MultiSelect} from "../MultiSelect";
-import {PopupHeader} from "../Popup-Product/PopupHeader";
-import {ClosePopup} from "../Popup-Product/ClosePopup";
+import medusaProductsRequests from "../api/medusa-product";
+import {ProductCard} from "../components/Popup/ProductCard";
+import {Illo} from "../components/Illo";
+import {MultiSelect} from "../components/MultiSelect";
+import {PopupHeader} from "../components/Popup/PopupHeader";
+import {ClosePopup} from "../components/Popup/ClosePopup";
 import { useIntl } from 'react-intl'
-import getTrad from "../../utils/getTrad";
+import getTrad from "../utils/getTrad";
+import {Option} from "../components/MultiSelect/Option";
 
-const ProductSelector = (props) => {
+const ProductSelectorInput = (props) => {
   const {
     attribute,
     name: inputName,
@@ -25,6 +26,7 @@ const ProductSelector = (props) => {
   const { formatMessage } = useIntl();
   const { register, watch, reset } = useForm({defaultValues: {'product-selected': []}});
 
+  const [resourceId, setResourceId] = React.useState(null)
   const [productsData, setProductsData] = React.useState<null | Record<string, any>>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const [isDetailsVisible, setIsDetailsVisible] = React.useState(false);
@@ -32,14 +34,17 @@ const ProductSelector = (props) => {
   const [selectedProducts, setSelectedProducts] = React.useState(val)
   const [searchValue, setSearchValue] = React.useState('');
 
+  const mutateSearch = (val:string) => setSearchValue(val.toLowerCase())
+
   const fetchData = async () => {
     if(isLoading === false) setIsLoading(true)
-    const medusaProducts = await medusaProductsRequests.getAllMedusaProducts()
+    const medusaProducts = await medusaProductsRequests.getAllMedusaProductsWithStatus()
     setProductsData(medusaProducts)
     setIsLoading(false)
   }
 
   React.useEffect(() => {
+    setResourceId(window.location.href.split("/").pop())
     const fetch = async () => {
       await fetchData()
     };
@@ -70,9 +75,14 @@ const ProductSelector = (props) => {
             placeholder={formatMessage({
               id: getTrad('products-input.placeholder')
             })}
-            options={productsData?.products}
             value={selectedProducts}
-          />
+          >
+            {productsData?.products?.map(({ title, id, isAlreadyUsed }) => (
+              <Option disabled={isAlreadyUsed && isAlreadyUsed != resourceId } value={id} key={`option_${id}`}>
+                {title}
+              </Option>
+            ))}
+          </MultiSelect>
         </div>
         <Button size={'L'} onClick={() => setIsDetailsVisible(prev => !prev)}>
           {formatMessage({
@@ -94,7 +104,7 @@ const ProductSelector = (props) => {
           content: {padding: 0, height: '90vh', width: '90vw', maxWidth: '1600px', top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)',
           }}
         }>
-        <Box background={"neutral100"}>
+        <Box background={"neutral100"} style={{height: '100%'}}>
             <>
               <ClosePopup closeModal={(e) => {
                 document.body.style.overflowY = 'auto'
@@ -103,7 +113,7 @@ const ProductSelector = (props) => {
               <PopupHeader
                 productsData={productsData}
                 refetch={fetchData}
-                setSearch={setSearchValue}
+                setSearch={mutateSearch}
                 resetForm={reset}
                 selectedProducts={selectedProducts}
                 closeModal={(e) => {
@@ -125,7 +135,7 @@ const ProductSelector = (props) => {
                 ) : (
                   <GridLayout>
                     {productsData?.products.map(product => {
-                      return (product.title.includes(searchValue) || product.description.includes(searchValue) ?
+                      return (product.title.toLowerCase().includes(searchValue) || product.description.toLowerCase().includes(searchValue) ?
                           (<Box
                             style={{gridTemplateColumns: 'repeat(3, minmax(0, 1fr)'}}
                             padding={4}
@@ -141,6 +151,7 @@ const ProductSelector = (props) => {
                               value={product.id}
                               register={register}
                               imageSrc={product.thumbnail}
+                              disabled={product.isAlreadyUsed && product.isAlreadyUsed != resourceId }
                               displayCheck
                             />
                           </Box>) : null
@@ -156,4 +167,4 @@ const ProductSelector = (props) => {
   );
 }
 
-export default ProductSelector
+export default ProductSelectorInput
