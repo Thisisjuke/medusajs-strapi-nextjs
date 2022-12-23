@@ -14,8 +14,16 @@ const findAllWithStatus = async (ctx) => {
   }
 }
 
+const findAllWithRelationDetails = async (ctx) => {
+  try{
+    return await strapi.plugin('medusa-product-selector').service('medusaProducts').findAllWithRelationDetails(ctx.query)
+  } catch (e) {
+    ctx.throw(500, e)
+  }
+}
 
 export default {
   findAll,
-  findAllWithStatus
+  findAllWithStatus,
+  findAllWithRelationDetails
 }

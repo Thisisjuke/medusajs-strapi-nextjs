@@ -10,6 +10,11 @@ export const medusaProductsRequests = {
     return await request('/medusa-product-selector/products/status', {
       method: 'GET'
     })
+  },
+  getAllMedusaProductsWithRelationDetails: async () => {
+    return await request('/medusa-product-selector/products/details', {
+      method: 'GET'
+    })
   }
 }
 

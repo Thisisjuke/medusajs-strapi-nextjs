@@ -48,7 +48,6 @@ const StyledCard = styled(Card)`
   `}
 `;
 
-
 export const ProductCard = ({title, subtitle, badge, imageSrc, displayCheck, value, register, defaultChecked, disabled = false }:ProductCardProps) => {
   const additionalProps = () => {
     if(disabled) {

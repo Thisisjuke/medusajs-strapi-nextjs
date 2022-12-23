@@ -16,4 +16,13 @@ export default [
       auth: false
     },
   },
+  {
+    method: 'GET',
+    path: '/products/details',
+    handler: 'medusaProducts.findAllWithRelationDetails',
+    config: {
+      policies: [],
+      auth: false
+    },
+  },
 ]
