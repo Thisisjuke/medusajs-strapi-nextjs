@@ -104,7 +104,7 @@ const ProductSelectorInput = (props) => {
           content: {padding: 0, height: '90vh', width: '90vw', maxWidth: '1600px', top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)',
           }}
         }>
-        <Box background={"neutral100"} style={{height: '100%'}}>
+        <Box background={"neutral100"}>
             <>
               <ClosePopup closeModal={(e) => {
                 document.body.style.overflowY = 'auto'
@@ -133,11 +133,10 @@ const ProductSelectorInput = (props) => {
                     content={"There is no published products coming for your Medusa Ecommerce."}
                   />
                 ) : (
-                  <GridLayout>
+                  <GridLayout style={{gridTemplateColumns: 'repeat(4, minmax(0, 1fr)'}}>
                     {productsData?.products.map(product => {
                       return (product.title.toLowerCase().includes(searchValue) || product.description.toLowerCase().includes(searchValue) ?
                           (<Box
-                            style={{gridTemplateColumns: 'repeat(3, minmax(0, 1fr)'}}
                             padding={4}
                             hasRadius
                             background="neutral0"
@@ -147,7 +146,6 @@ const ProductSelectorInput = (props) => {
                             <ProductCard
                               title={product.title}
                               subtitle={product.description}
-                              defaultChecked={selectedProducts.includes(product.id)}
                               value={product.id}
                               register={register}
                               imageSrc={product.thumbnail}

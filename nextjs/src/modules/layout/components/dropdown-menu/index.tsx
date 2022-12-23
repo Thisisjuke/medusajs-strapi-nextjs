@@ -74,7 +74,7 @@ const DropdownMenu = () => {
                                       <Link
                                         href={`/collections/${collection.id}`} onClick={() => setOpen(false)}
                                       >
-                                        collection.title
+                                        {collection.title}
                                       </Link>
                                     </div>
                                   )

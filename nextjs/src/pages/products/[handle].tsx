@@ -64,7 +64,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
         data,
-        blocks: content[0] ? content[0]?.blocks : []
+        blocks: content ? content : []
     },
   }
 }
