@@ -2,7 +2,7 @@ import {request} from '@strapi/helper-plugin'
 
 export const medusaCollectionsRequests = {
   getAllMedusaCollections: async () => {
-    return await request('/medusa-product-selector/products/all', {
+    return await request('/medusa-product-selector/collections/all', {
       method: 'GET'
     })
   },
