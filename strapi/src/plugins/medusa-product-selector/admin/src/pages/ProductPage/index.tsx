@@ -19,6 +19,7 @@ import {ClosePopup} from "../../components/Popup/ClosePopup";
 import ProductDisplay from "../../components/ProductDisplay";
 import {fetcher} from "../../utils/fetcher";
 import {FilterProductForm} from "../../components/forms/FilterProductForm";
+import {useForm} from "react-hook-form";
 
 const PageHeader = ({formatMessage}) => (
   <BaseHeaderLayout
@@ -43,17 +44,28 @@ const PageLayout = ({children, formatMessage}) => (
 
 const defaultValues = {
   searchText: '',
-  collectionId: null
+  collectionId: null,
+  page: 1
 }
 
 const ProductPage = () => {
   const { formatMessage } = useIntl();
 
-  const [viewProductDetails, setViewProductDetails] = React.useState(false)
-  const [searchValue, setSearchValue] = React.useState(defaultValues)
+  const { control, getValues, watch } = useForm({ defaultValues });
 
-  const { data:collectionsData, error:collectionsError, isLoading:collectionsIsLoading } = useSWR(['/medusa-product-selector/collections/all', searchValue], fetcher)
-  const { data:productsData, error:productsError, isLoading:productsIsLoading } = useSWR(['/medusa-product-selector/products/details', searchValue], fetcher)
+  const [viewProductDetails, setViewProductDetails] = React.useState(false)
+  const [search, setSearch] = React.useState(defaultValues)
+
+  React.useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if(name === "page"){setSearch(getValues())}
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const { data:collectionsData, error:collectionsError, isLoading:collectionsIsLoading } = useSWR(['/medusa-product-selector/collections/all', {}], fetcher)
+  const { data:productsData, error:productsError, isLoading:productsIsLoading } = useSWR(['/medusa-product-selector/products/details', search], fetcher)
 
   if(collectionsIsLoading || productsIsLoading) return (
     <PageLayout formatMessage={formatMessage}>
@@ -82,10 +94,13 @@ const ProductPage = () => {
     <>
       <PageLayout formatMessage={formatMessage}>
         <ContentLayout>
-          <FilterProductForm defaultValues={defaultValues} collections={collectionsData?.collections} onSubmit={setSearchValue} />
-        </ContentLayout>
-        <ContentLayout>
-          {!productsData || productsData?.products?.length === 0 ? (
+          <FilterProductForm
+            totalProducts={productsData.count}
+            collections={collectionsData?.collections}
+            control={control}
+            onSubmit={() => setSearch(getValues())}
+          >
+            {!productsData || productsData?.products?.length === 0 ? (
               <EmptyStateLayout
                 icon={<Illo />}
                 content={formatMessage({
@@ -93,27 +108,28 @@ const ProductPage = () => {
                 })}
               />
             ) : (
-            <GridLayout style={{gridTemplateColumns: 'repeat(4, minmax(0, 1fr)'}}>
-              {productsData?.products?.map(product => (
-                <Box
-                  style={{cursor: 'pointer'}}
-                  padding={4}
-                  hasRadius
-                  background="neutral0"
-                  key={product.id}
-                  shadow="tableShadow"
-                  onClick={() => setViewProductDetails(product)}
-                >
-                  <ProductCard
-                    title={product.title}
-                    subtitle={product.description}
-                    value={product.id}
-                    imageSrc={product.thumbnail}
-                  />
-                </Box>
-              ))}
-            </GridLayout>
-          )}
+              <GridLayout style={{gridTemplateColumns: 'repeat(4, minmax(0, 1fr)'}}>
+                {productsData?.products?.map(product => (
+                  <Box
+                    style={{cursor: 'pointer'}}
+                    padding={4}
+                    hasRadius
+                    background="neutral0"
+                    key={product.id}
+                    shadow="tableShadow"
+                    onClick={() => setViewProductDetails(product)}
+                  >
+                    <ProductCard
+                      title={product.title}
+                      subtitle={product.description}
+                      value={product.id}
+                      imageSrc={product.thumbnail}
+                    />
+                  </Box>
+                ))}
+              </GridLayout>
+            )}
+          </FilterProductForm>
         </ContentLayout>
       </PageLayout>
       <Modal

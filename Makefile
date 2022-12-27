@@ -1,5 +1,5 @@
 install:
-	yarn --cwd ./api install && yarn --cwd ./admin-panel install
+	yarn --cwd ./medusa-api install && yarn --cwd ./admin-panel install && yarn --ignore-engines --cwd ./strapi install && yarn --cwd ./nextjs install
 
 init:
 	docker-compose build && make install

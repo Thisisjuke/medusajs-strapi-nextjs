@@ -1,6 +1,8 @@
 import { Strapi } from '@strapi/strapi';
 import {useMedusaClient} from "../utils/useMedusaClient";
 
+const PRODUCTS_PER_PAGE = 12
+
 export default ({ strapi }: { strapi: Strapi }) => ({
   async find() {
     const medusa = await useMedusaClient()
@@ -35,16 +37,30 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     return data
   },
-  async findAllWithRelationDetails() {
+  async findAllWithRelationDetails(query) {
+    const filters = {
+      limit: PRODUCTS_PER_PAGE
+    }
+    if(query.collectionId){
+      filters['collection_id'] = [query.collectionId]
+    }
+    if(query.searchText && query.searchText != ''){
+      filters['q'] = query.searchText
+    }
+    if(query.page && Number.isInteger(parseInt(query.page))){
+      filters['offset'] = (parseInt(query.page) - 1) * PRODUCTS_PER_PAGE
+    }
+
     const medusa = await useMedusaClient()
-    const productsList = await medusa.products.list()
+    const productsList = await medusa.products.list(filters)
     const { response, ...data } = productsList;
+    const productsData = data.products as any
 
     const {collections} = await strapi.plugin('medusa-product-selector').service('medusaCollections').findAllWithStatus()
 
     const products = []
 
-    for (const product of data?.products) {
+    for (const product of productsData) {
       let obj = product as any
       const data = await strapi.db.query('plugin::medusa-product-selector.page').findMany({
         where: {
