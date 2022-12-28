@@ -96,7 +96,6 @@ const ProductPage = () => {
         <ContentLayout>
           <FilterProductForm
             totalProducts={productsData.count}
-            collections={collectionsData?.collections}
             control={control}
             onSubmit={() => setSearch(getValues())}
           >

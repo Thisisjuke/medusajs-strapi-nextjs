@@ -3,6 +3,23 @@ import {useMedusaClient} from "../utils/useMedusaClient";
 
 const PRODUCTS_PER_PAGE = 12
 
+const getFilters = (params) => {
+  const filters = {
+    limit: PRODUCTS_PER_PAGE
+  }
+  if(params.collectionId){
+    filters['collection_id'] = [params.collectionId]
+  }
+  if(params.searchText && params.searchText != ''){
+    filters['q'] = params.searchText
+  }
+  if(params.page && Number.isInteger(parseInt(params.page))){
+    filters['offset'] = (parseInt(params.page) - 1) * PRODUCTS_PER_PAGE
+  }
+
+  return filters
+}
+
 export default ({ strapi }: { strapi: Strapi }) => ({
   async find() {
     const medusa = await useMedusaClient()
@@ -11,9 +28,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     return data
   },
-  async findAllWithStatus() {
+  async findAllWithStatus(query) {
+    const filters = getFilters(query)
+
     const medusa = await useMedusaClient()
-    const productsList = await medusa.products.list()
+    const productsList = await medusa.products.list(filters)
     const { response, ...data } = productsList;
 
     const products = []
@@ -38,18 +57,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return data
   },
   async findAllWithRelationDetails(query) {
-    const filters = {
-      limit: PRODUCTS_PER_PAGE
-    }
-    if(query.collectionId){
-      filters['collection_id'] = [query.collectionId]
-    }
-    if(query.searchText && query.searchText != ''){
-      filters['q'] = query.searchText
-    }
-    if(query.page && Number.isInteger(parseInt(query.page))){
-      filters['offset'] = (parseInt(query.page) - 1) * PRODUCTS_PER_PAGE
-    }
+    const filters = getFilters(query)
 
     const medusa = await useMedusaClient()
     const productsList = await medusa.products.list(filters)

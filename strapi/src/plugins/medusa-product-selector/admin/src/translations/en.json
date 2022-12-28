@@ -21,7 +21,7 @@
   "products-input-modal.subtitle": "product(s) found.",
   "products-input-modal.clear-cta": "Clear selection",
   "products-input-modal.validate-cta": "Validate",
-  "products-input-modal.refetch-cta": "Refetch products",
+  "products-input-modal.collection-placeholder": "Filter by collection.",
   "products-input-modal.products-selected": "products(s) selected.",
   "products-input-modal.search-placeholder": "E.g: yellow bag",
   "collection-input.label": "Selected collections:",

@@ -1,17 +1,14 @@
 import * as React from 'react';
-import { useForm } from "react-hook-form";
-import Modal from 'react-modal';
+import {Controller, useForm} from "react-hook-form";
 
 import { Box, Loader, Button, ContentLayout, EmptyStateLayout, GridLayout } from '@strapi/design-system';
-import medusaProductsRequests from "../api/medusa-product";
-import {ProductCard} from "../components/Popup/ProductCard";
-import {Illo} from "../components/Illo";
 import {MultiSelect} from "../components/MultiSelect";
-import {PopupHeader} from "../components/Popup/PopupHeader";
-import {ClosePopup} from "../components/Popup/ClosePopup";
 import { useIntl } from 'react-intl'
 import getTrad from "../utils/getTrad";
 import {Option} from "../components/MultiSelect/Option";
+import useSWR from "swr";
+import {fetcher} from "../utils/fetcher";
+import {Popup} from "../components/Popup";
 
 const ProductSelectorInput = (props) => {
   const {
@@ -23,66 +20,74 @@ const ProductSelectorInput = (props) => {
 
   const val = value ? JSON.parse(value) : []
 
+  const defaultValues = {
+    'product-selected': val,
+    searchText: '',
+    collectionId: null,
+    page: 1
+  }
+
   const { formatMessage } = useIntl();
-  const { register, watch, reset } = useForm({defaultValues: {'product-selected': []}});
+  const { register, watch, control, getValues } = useForm({defaultValues});
 
   const [resourceId, setResourceId] = React.useState(null)
-  const [productsData, setProductsData] = React.useState<null | Record<string, any>>(null)
-  const [isLoading, setIsLoading] = React.useState(true)
   const [isDetailsVisible, setIsDetailsVisible] = React.useState(false);
 
   const [selectedProducts, setSelectedProducts] = React.useState(val)
-  const [searchValue, setSearchValue] = React.useState('');
+  const [search, setSearch] = React.useState<null | Record<string, any>>(defaultValues);
 
-  const mutateSearch = (val:string) => setSearchValue(val.toLowerCase())
-
-  const fetchData = async () => {
-    if(isLoading === false) setIsLoading(true)
-    const medusaProducts = await medusaProductsRequests.getAllMedusaProductsWithStatus()
-    setProductsData(medusaProducts)
-    setIsLoading(false)
-  }
+  const { data:productsData, error:productsError, isLoading:productsIsLoading } = useSWR(['/medusa-product-selector/products/status', {}], fetcher)
 
   React.useEffect(() => {
     setResourceId(window.location.href.split("/").pop())
-    const fetch = async () => {
-      await fetchData()
-    };
-
-    fetch().then();
   }, []);
 
   React.useEffect(() => {
     const subscription = watch((value, { name }) => {
-      onChange({ target: { name: inputName, value: JSON.stringify(value[name]), type: attribute.type } })
-      setSelectedProducts(value?.[name] || [])
+      if(name === "page"){setSearch(getValues())}
+      if(name === "product-selected"){
+        onChange({ target: { name: inputName, value: JSON.stringify(value[name]), type: attribute.type } })
+        setSelectedProducts(value?.[name] || [])
+      }
     });
 
     return () => subscription.unsubscribe();
   }, [watch]);
 
+  if(productsError) return (
+    'error'
+  )
+
+  if(productsIsLoading) return (
+    'productsIsLoading'
+  )
+
   return (
-    <div>
+    <>
       <section style={{display: 'flex', alignItems: 'end', justifyContent: 'center', gap: '12px'}}>
         <div style={{flex: 1}}>
-          <MultiSelect
-            {...register('product-selected')}
-            setSearchValue={setSearchValue}
-            label={formatMessage({
-              id: getTrad('products-input.label')
-            })}
-            description={''}
-            placeholder={formatMessage({
-              id: getTrad('products-input.placeholder')
-            })}
-            value={selectedProducts}
-          >
-            {productsData?.products?.map(({ title, id, isAlreadyUsed }) => (
-              <Option disabled={isAlreadyUsed && isAlreadyUsed != resourceId } value={id} key={`option_${id}`}>
-                {title}
-              </Option>
-            ))}
-          </MultiSelect>
+          <Controller
+            name="product-selected"
+            control={control}
+            render={({ field }) => (
+              <MultiSelect
+                {...field}
+                label={formatMessage({
+                  id: getTrad('products-input.label')
+                })}
+                description={''}
+                placeholder={formatMessage({
+                  id: getTrad('products-input.placeholder')
+                })}
+              >
+                {productsData?.products?.map(({ title, id, isAlreadyUsed }) => (
+                  <Option disabled={isAlreadyUsed && isAlreadyUsed != resourceId } value={id} key={`option_${id}`}>
+                    {title}
+                  </Option>
+                ))}
+              </MultiSelect>
+            )}
+          />
         </div>
         <Button size={'L'} onClick={() => setIsDetailsVisible(prev => !prev)}>
           {formatMessage({
@@ -90,78 +95,19 @@ const ProductSelectorInput = (props) => {
           })}
         </Button>
       </section>
-      <Modal
-        isOpen={isDetailsVisible}
-        onAfterOpen={(e) => {
-          document.body.style.overflowY = 'hidden'
-        }}
-        onRequestClose={(e) => {
-          document.body.style.overflowY = 'auto'
-          setIsDetailsVisible(false)
-        }}
-        style={{
-          overlay: {zIndex: 100},
-          content: {padding: 0, height: '90vh', width: '90vw', maxWidth: '1600px', top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)',
-          }}
-        }>
-        <Box background={"neutral100"}>
-            <>
-              <ClosePopup closeModal={(e) => {
-                document.body.style.overflowY = 'auto'
-                setIsDetailsVisible(false)
-              }} />
-              <PopupHeader
-                productsData={productsData}
-                refetch={fetchData}
-                setSearch={mutateSearch}
-                resetForm={reset}
-                selectedProducts={selectedProducts}
-                closeModal={(e) => {
-                  document.body.style.overflowY = 'auto'
-                  setIsDetailsVisible(false)
-                }}
-              />
-              <ContentLayout>
-                {isLoading ? (
-                  <div style={{width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingTop: "1rem", paddingBottom: "1rem"
-                  }}>
-                    <Loader>Loading products</Loader>
-                  </div>
-                ) : (productsData?.products.length === 0 ? (
-                  <EmptyStateLayout
-                    icon={<Illo/>}
-                    content={"There is no published products coming for your Medusa Ecommerce."}
-                  />
-                ) : (
-                  <GridLayout style={{gridTemplateColumns: 'repeat(4, minmax(0, 1fr)'}}>
-                    {productsData?.products.map(product => {
-                      return (product.title.toLowerCase().includes(searchValue) || product.description.toLowerCase().includes(searchValue) ?
-                          (<Box
-                            padding={4}
-                            hasRadius
-                            background="neutral0"
-                            key={product.id}
-                            shadow="tableShadow"
-                          >
-                            <ProductCard
-                              title={product.title}
-                              subtitle={product.description}
-                              value={product.id}
-                              register={register}
-                              imageSrc={product.thumbnail}
-                              disabled={product.isAlreadyUsed && product.isAlreadyUsed != resourceId }
-                              displayCheck
-                            />
-                          </Box>) : null
-                      )
-                    })}
-                  </GridLayout>
-                ))}
-              </ContentLayout>
-            </>
-        </Box>
-      </Modal>
-    </div>
+      <Popup
+        isDetailsVisible={isDetailsVisible}
+        setIsDetailsVisible={setIsDetailsVisible}
+        selectedProducts={selectedProducts}
+        control={control}
+        setSearch={setSearch}
+        getValues={getValues}
+        register={register}
+        resourceId={resourceId}
+        search={search}
+        totalProducts={productsData.count}
+      />
+    </>
   );
 }
 
