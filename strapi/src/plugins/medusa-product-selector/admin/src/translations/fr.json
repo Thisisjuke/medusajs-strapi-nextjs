@@ -25,5 +25,7 @@
   "products-input-modal.products-selected": "produits(s) sélectionné(s).",
   "products-input-modal.search-placeholder": "Ex.: sac à dos jaune",
   "collection-input.label": "Collections à assigner:",
-  "collection-input.placeholder": "Vos collections assignées apparaissent ici."
+  "collection-input.placeholder": "Vos collections assignées apparaissent ici.",
+  "common.error.title": "Erreur",
+  "common.error.message": "Il y a eu un problème."
 }

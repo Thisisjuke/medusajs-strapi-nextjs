@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Controller, useForm} from "react-hook-form";
 
-import { Box, Loader, Button, ContentLayout, EmptyStateLayout, GridLayout } from '@strapi/design-system';
+import { Button, Alert, Flex, Loader } from '@strapi/design-system';
 import {MultiSelect} from "../components/MultiSelect";
 import { useIntl } from 'react-intl'
 import getTrad from "../utils/getTrad";
@@ -55,11 +55,22 @@ const ProductSelectorInput = (props) => {
   }, [watch]);
 
   if(productsError) return (
-    'error'
+    <Alert
+      title={formatMessage({
+        id: getTrad('common.error.title')
+      })}
+      variant="danger"
+    >
+      {formatMessage({
+        id: getTrad('common.error.message')
+      })}
+    </Alert>
   )
 
   if(productsIsLoading) return (
-    'productsIsLoading'
+    <Flex>
+      <Loader small>Loading</Loader>
+    </Flex>
   )
 
   return (
@@ -72,10 +83,10 @@ const ProductSelectorInput = (props) => {
             render={({ field }) => (
               <MultiSelect
                 {...field}
+                description={''}
                 label={formatMessage({
                   id: getTrad('products-input.label')
                 })}
-                description={''}
                 placeholder={formatMessage({
                   id: getTrad('products-input.placeholder')
                 })}

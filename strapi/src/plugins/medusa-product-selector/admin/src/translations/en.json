@@ -25,5 +25,7 @@
   "products-input-modal.products-selected": "products(s) selected.",
   "products-input-modal.search-placeholder": "E.g: yellow bag",
   "collection-input.label": "Selected collections:",
-  "collection-input.placeholder": "Selected collections will be displayed here"
+  "collection-input.placeholder": "Selected collections will be displayed here",
+  "common.error.title": "Error",
+  "common.error.message": "There is an issue."
 }
