@@ -126,7 +126,7 @@ services:
       - "9010:9000"
       - "9011:9001"
     volumes:
-      - ./.medusa_minio_storage:/data
+      - medusa_minio:/data
     environment:
       MINIO_ROOT_USER: masoud
       MINIO_ROOT_PASSWORD: Strong#Pass#2022
@@ -148,3 +148,4 @@ networks:
 volumes:
   strapi-postgres:
   medusa-postgres:
+  medusa_minio:

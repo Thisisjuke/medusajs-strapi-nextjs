@@ -21,9 +21,11 @@
   "products-input-modal.subtitle": "produits(s) trouvé(s).",
   "products-input-modal.clear-cta": "Effacer ma sélection",
   "products-input-modal.validate-cta": "Valider",
-  "products-input-modal.refetch-cta": "Actualiser les produits",
+  "products-input-modal.collection-placeholder": "Filtrer par collection.",
   "products-input-modal.products-selected": "produits(s) sélectionné(s).",
   "products-input-modal.search-placeholder": "Ex.: sac à dos jaune",
   "collection-input.label": "Collections à assigner:",
-  "collection-input.placeholder": "Vos collections assignées apparaissent ici."
+  "collection-input.placeholder": "Vos collections assignées apparaissent ici.",
+  "common.error.title": "Erreur",
+  "common.error.message": "Il y a eu un problème."
 }

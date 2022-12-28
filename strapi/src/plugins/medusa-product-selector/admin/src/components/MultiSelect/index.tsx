@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Select } from '@strapi/design-system'
 
 export const MultiSelect = React.forwardRef((props:any, ref) => {
-  const {children, label, description, placeholder, defaultValue = [], value, onChange, name, setSearchValue} = props
+  const {children, label, description, placeholder, defaultValue = [], value = [], onChange, name} = props
 
   return (
     <Select
