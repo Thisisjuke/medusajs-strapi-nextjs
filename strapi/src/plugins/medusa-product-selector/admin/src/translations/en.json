@@ -1,6 +1,8 @@
 {
-  "plugin.name": "Medusa Products",
-  "plugin.description": "Link products coming from MedusaJS",
+  "plugin.collections.name": "Medusa Products",
+  "plugin.collections.description": "Link products coming from MedusaJS.",
+  "plugin.products.name": "Medusa Collections",
+  "plugin.products.description": "Link collections coming from MedusaJS.",
   "navigation.title": "Medusa Products",
   "list-page.title": "Your Medusa products.",
   "list-page.subtitle": "See here all your published Medusa products.",

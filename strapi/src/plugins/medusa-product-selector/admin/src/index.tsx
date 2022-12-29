@@ -17,11 +17,11 @@ export default {
       pluginId: pluginId,
       type: "string",
       intlLabel: {
-        id: getTrad('plugin.aaaa'),
+        id: getTrad('plugin.collections.name'),
         defaultMessage: 'Medusa Collections Selector',
       },
       intlDescription: {
-        id: getTrad('plugin.bbbb'),
+        id: getTrad('plugin.collections.description'),
         defaultMessage: 'Link collections coming from MedusaJS',
       },
       icon: ProductIcon,
@@ -34,11 +34,11 @@ export default {
       pluginId: pluginId,
       type: "string",
       intlLabel: {
-        id: getTrad('plugin.name'),
+        id: getTrad('plugin.products.name'),
         defaultMessage: 'Medusa Products Selector',
       },
       intlDescription: {
-        id: getTrad('plugin.description'),
+        id: getTrad('plugin.products.description'),
         defaultMessage: 'Link products coming from MedusaJS',
       },
       icon: ProductIcon,
