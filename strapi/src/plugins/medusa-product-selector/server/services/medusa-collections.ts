@@ -10,16 +10,18 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     return data
   },
-  async findAllWithStatus() {
+  async findAllWithStatus(query) {
     const medusa = await useMedusaClient()
     const productsList = await medusa.collections.list()
     const { response, ...data } = productsList;
+
+    const resourceType = query?.resource || 'plugin::medusa-product-selector.product-page'
 
     const collections = []
 
     for (const collection of data?.collections) {
       let obj = collection as any
-      const data = await strapi.db.query('plugin::medusa-product-selector.page').findOne({
+      const data = await strapi.db.query(resourceType).findOne({
         where: {
           $and: [
             {
