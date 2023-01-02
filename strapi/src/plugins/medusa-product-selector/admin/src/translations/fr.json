@@ -1,6 +1,8 @@
 {
-  "plugin.name": "Produits Medusa",
-  "plugin.description": "Connectez vos produits en provenance de MedusaJS",
+  "plugin.collections.name": "Collections Medusa",
+  "plugin.collections.description": "Connectez vos collections en provenance de MedusaJS.",
+  "plugin.products.name": "Produits Medusa",
+  "plugin.products.description": "Connectez vos produits en provenance de MedusaJS.",
   "navigation.title": "Produits Medusa",
   "list-page.title": "Vos Produits Medusa.",
   "list-page.subtitle": "Retrouvez ici tous vos produits publiés sur Medusa.",

@@ -7,13 +7,16 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     })
   },
   async findTemplateForCollection(query) {
+    const collectionId = query?.id
+    const resourceType = query?.resourceType
+
     return await strapi.db.query('plugin::medusa-product-selector.template').findOne({
       where: {
         $and: [
           {
-            page: {
+            [resourceType]: {
               collectionIds: {
-                $contains: query?.id,
+                $contains: collectionId,
               },
             }
           },

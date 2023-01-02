@@ -30,11 +30,18 @@ const CollectionSelectorInput = (props) => {
   const { watch, control } = useForm({defaultValues});
 
   const [resourceId, setResourceId] = React.useState(null)
+  const [resourceType, setResourceType] = React.useState(null)
 
-  const { data:collectionsData, error:collectionsError, isLoading:collectionsIsLoading } = useSWR(['/medusa-product-selector/collections/status', {}], fetcher)
+  const { data:collectionsData, error:collectionsError, isLoading:collectionsIsLoading } = useSWR(
+    [
+      '/medusa-product-selector/collections/status',
+      {resource: resourceType}
+    ], fetcher)
 
   React.useEffect(() => {
-    setResourceId(window.location.href.split("/").pop())
+    const url = window.location.href.split("/")
+    setResourceId(url.pop())
+    setResourceType(url.pop())
   }, []);
 
   React.useEffect(() => {

@@ -4,9 +4,7 @@ import {useMedusaClient} from "../utils/useMedusaClient";
 const PRODUCTS_PER_PAGE = 12
 
 const getFilters = (params) => {
-  const filters = {
-    limit: PRODUCTS_PER_PAGE
-  }
+  const filters = {}
   if(params.collectionId){
     filters['collection_id'] = [params.collectionId]
   }
@@ -14,6 +12,7 @@ const getFilters = (params) => {
     filters['q'] = params.searchText
   }
   if(params.page && Number.isInteger(parseInt(params.page))){
+    filters['limit'] = PRODUCTS_PER_PAGE
     filters['offset'] = (parseInt(params.page) - 1) * PRODUCTS_PER_PAGE
   }
 
@@ -39,7 +38,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     for (const product of data?.products) {
       let obj = product as any
-      const data = await strapi.db.query('plugin::medusa-product-selector.page').findOne({
+      const data = await strapi.db.query('plugin::medusa-product-selector.product-page').findOne({
         where: {
           productIds: {
             $contains: product?.id,
@@ -70,7 +69,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     for (const product of productsData) {
       let obj = product as any
-      const data = await strapi.db.query('plugin::medusa-product-selector.page').findMany({
+      const data = await strapi.db.query('plugin::medusa-product-selector.product-page').findMany({
         where: {
           productIds: {
             $contains: product?.id,
@@ -82,7 +81,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       }
       for (const collection of collections) {
         if(collection.id === product.collection_id){
-          const c = await strapi.db.query('plugin::medusa-product-selector.page').findMany({
+          const c = await strapi.db.query('plugin::medusa-product-selector.product-page').findMany({
             where: {
               collectionIds: {
                 $contains: collection?.id,

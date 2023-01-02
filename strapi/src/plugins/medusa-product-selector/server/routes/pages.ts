@@ -17,4 +17,13 @@ export default [
       auth: false
     },
   },
+  {
+    method: 'GET',
+    path: '/collection-pages',
+    handler: 'page.findCollectionPages',
+    config: {
+      policies: [],
+      auth: false
+    },
+  }
 ]

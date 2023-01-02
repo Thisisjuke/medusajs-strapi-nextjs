@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_block_products_row_blocks",
+  "info": {
+    "displayName": "ProductsRowBlock",
+    "icon": "shopping-bag",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "products": {
+      "type": "customField",
+      "customField": "plugin::medusa-product-selector.products"
+    },
+    "ctaText": {
+      "type": "string"
+    },
+    "ctaUrl": {
+      "type": "string"
+    }
+  }
+}

@@ -11,6 +11,7 @@ import { ParsedUrlQuery } from "querystring"
 import { ReactElement } from "react"
 import { dehydrate, QueryClient, useQuery } from "react-query"
 import { NextPageWithLayout, PrefetchedPageProps } from "../../types/global"
+import {BlocksBuilder} from "../../blocks/BlockBuilder";
 
 interface Params extends ParsedUrlQuery {
   id: string
@@ -47,6 +48,7 @@ export const fetchCollectionProducts = async ({
 
 const CollectionPage: NextPageWithLayout<PrefetchedPageProps> = ({
   notFound,
+  blocks,
 }) => {
   const { query, isFallback, replace } = useRouter()
   const id = typeof query.id === "string" ? query.id : ""
@@ -77,6 +79,7 @@ const CollectionPage: NextPageWithLayout<PrefetchedPageProps> = ({
       <>
         <Head title={data.title} description={`${data.title} collection`} />
         <CollectionTemplate collection={data} />
+        <BlocksBuilder blocks={blocks}/>
       </>
     )
   }
@@ -113,6 +116,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
   )
 
+  const content = await fetch(`${process.env.STRAPI_BACKEND_URL}/medusa-product-selector/collection-pages?id=${id}`)
+      .then((res) => res.json())
+      .then((data) => data)
+      .catch((e) => {
+        throw new Error('500', e)
+      });
+
   const queryData = await queryClient.getQueryData([`get_collection`, id])
 
   if (!queryData) {
@@ -127,6 +137,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       // Work around see – https://github.com/TanStack/query/issues/1458#issuecomment-747716357
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      blocks: content ? content : [],
       notFound: false,
     },
   }
