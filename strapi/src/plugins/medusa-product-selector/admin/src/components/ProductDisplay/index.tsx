@@ -33,8 +33,11 @@ const Tag = styled.div`
   padding: 6px 10px;
   font-size: 0.8em;
   margin-right: 5px;
+
   background-color: ${({theme}) => theme.colors.primary100 };
 `;
+
+const PAGE_BASE_URL = '/admin/content-manager/collectionType/plugin::medusa-product-selector.page'
 
 const ProductDisplay = ({product}) => {
   const {title, description, thumbnail, images = [], tags = []} = product
@@ -47,6 +50,8 @@ const ProductDisplay = ({product}) => {
   const handlePrevious = () => {
     setSelectedIndex(current => current > 0 ? current - 1 : images.length - 1 );
   };
+
+  console.log(product)
 
   return (
     <Box padding={8}>
@@ -128,7 +133,7 @@ const ProductDisplay = ({product}) => {
                   <>
                     <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}} >Included in Collection(s):</Typography>
                     {product?.relatedCollections.map(collection => (
-                      <a href={`/admin/content-manager/collectionType/plugin::medusa-product-selector.page/${collection.id}`}>
+                      <a href={`/${collection.id}`}>
                         <Status variant={collection?.publishedAt ? 'success' : 'secondary'} showBullet={false}>
                           <Typography>
                             {collection.name}
@@ -142,6 +147,27 @@ const ProductDisplay = ({product}) => {
                   <Status style={{marginTop: '8px'}} variant={'neutral'} showBullet={false}>
                     <Typography>
                       Not related to any pages.
+                    </Typography>
+                  </Status>
+                )}
+                {product && product?.relatedBlocks && (
+                  <>
+                    <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}} >Used in Block(s) inside pages:</Typography>
+                    {product?.relatedBlocks?.productPage?.map(block => (
+                      <a href={`/admin/content-manager/collectionType/plugin::medusa-product-selector.page/${block.id}`}>
+                        <Status variant={block?.publishedAt ? 'success' : 'secondary'} showBullet={false}>
+                          <Typography>
+                            {block.name}
+                          </Typography>
+                        </Status>
+                      </a>
+                    ))}
+                  </>
+                )}
+                {!product?.relatedBlocks && (
+                  <Status style={{marginTop: '8px'}} variant={'neutral'} showBullet={false}>
+                    <Typography>
+                      Not related to any blocks.
                     </Typography>
                   </Status>
                 )}
