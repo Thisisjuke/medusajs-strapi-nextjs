@@ -58,6 +58,22 @@ services:
     networks:
       - stack
 
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-test@test.test}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - stack
+    restart: unless-stopped
+
   medusa-admin:
     user: "${UID}:${GID}"
     env_file:
@@ -149,3 +165,4 @@ volumes:
   strapi-postgres:
   medusa-postgres:
   medusa_minio:
+  pgadmin:

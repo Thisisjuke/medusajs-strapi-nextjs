@@ -93,10 +93,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
           }
         }
       }
-      const blocks = await strapi.plugin('medusa-product-selector').service('blocks').findProductInBlocks({id: product?.id})
-      if(blocks){
-        obj['relatedBlocks'] = blocks
-      }
       products.push(obj)
     }
 

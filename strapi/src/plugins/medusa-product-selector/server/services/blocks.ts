@@ -1,22 +1,37 @@
 import { Strapi } from '@strapi/strapi';
+import {matchProductFromBlocks} from "../utils/match-product-from-blocks";
 
 export default ({ strapi }: { strapi: Strapi }) => ({
   async findProductInBlocks(query) {
-    const filter = {
-      populate: ['deep'],
-      where: {
-        blocks: {
-          $contains: query?.id,
-        },
-      },
-    }
-    const blocks = {}
+    const blocksWithProducts = {}
+    // @ts-ignore
+    Object.fromEntries(Object.entries(strapi.components).map( async ([blockName, blockValue]) => {
+      // @ts-ignore
+      if(JSON.stringify(blockValue.attributes).includes("plugin::medusa-product-selector.products")){
+        blocksWithProducts[blockName] = await strapi.db.query(blockName).findMany({
+          where: {
+            products: { $contains: query?.id }
+          }
+        })
+      }
+    }))
 
-    blocks['productPage'] = await strapi.entityService.findMany('plugin::medusa-product-selector.product-page', filter)
-    blocks['collectionPage'] = await strapi.entityService.findMany('plugin::medusa-product-selector.collection-page', filter)
-    blocks['editorialPage'] = await strapi.entityService.findMany('plugin::medusa-product-selector.editorial-page', filter)
+    const filter = { populate: ['deep'],}
 
-    console.log(query.id, blocks)
+    const blocks = {
+      collectionPage: [],
+      editorialPage: [],
+      productPage: [],
+    };
+
+    const collectionPages = (await strapi.db.query('plugin::medusa-product-selector.collection-page').findMany(filter)).map(page => matchProductFromBlocks(page, blocksWithProducts))
+    blocks.collectionPage.push(...collectionPages.filter(p => p));
+
+    const editorialPages = (await strapi.db.query('plugin::medusa-product-selector.editorial-page').findMany(filter)).map(page => matchProductFromBlocks(page, blocksWithProducts))
+    blocks.editorialPage.push(...editorialPages.filter(p => p));
+
+    const productPages = (await strapi.db.query('plugin::medusa-product-selector.product-page').findMany(filter)).map(page => matchProductFromBlocks(page, blocksWithProducts))
+    blocks.productPage.push(...productPages.filter(p => p));
 
     return blocks
   },
