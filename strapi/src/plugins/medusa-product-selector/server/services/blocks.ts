@@ -22,6 +22,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       collectionPage: [],
       editorialPage: [],
       productPage: [],
+      template: [],
     };
 
     const collectionPages = (await strapi.db.query('plugin::medusa-product-selector.collection-page').findMany(filter)).map(page => matchProductFromBlocks(page, blocksWithProducts))
@@ -32,6 +33,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     const productPages = (await strapi.db.query('plugin::medusa-product-selector.product-page').findMany(filter)).map(page => matchProductFromBlocks(page, blocksWithProducts))
     blocks.productPage.push(...productPages.filter(p => p));
+
+    const template = (await strapi.db.query('plugin::medusa-product-selector.template').findMany(filter)).map(page => matchProductFromBlocks(page, blocksWithProducts))
+    blocks.productPage.push(...template.filter(p => p));
 
     return blocks
   },

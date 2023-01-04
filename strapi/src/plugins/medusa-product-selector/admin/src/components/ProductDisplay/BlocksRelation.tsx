@@ -10,10 +10,9 @@ import {
 import useSWR from "swr";
 import {fetcher} from "../../utils/fetcher";
 import getTrad from "../../utils/getTrad";
+import config from "../../config";
 
-const PRODUCT_PAGE_URL = '/admin/content-manager/collectionType/plugin::medusa-product-selector.product-page'
-const COLLECTION_PAGE_URL = '/admin/content-manager/collectionType/plugin::medusa-product-selector.collection-page'
-const EDITORIAL_PAGE_URL = '/admin/content-manager/collectionType/plugin::medusa-product-selector.editorial-page'
+const {PRODUCT_PAGE_URL, COLLECTION_PAGE_URL, EDITORIAL_PAGE_URL, TEMPLATE_URL} = config
 
 export const BlocksRelation = ({product}) => {
   const { formatMessage } = useIntl();
@@ -33,13 +32,24 @@ export const BlocksRelation = ({product}) => {
   )
 
   if(isLoading) return (
-    <Flex>
-      <Loader small>Loading</Loader>
-    </Flex>
+    <>
+      <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}} >
+        {formatMessage({
+          id: getTrad('products-input-modal.related.subtitle')
+        })}
+      </Typography>
+      <Flex justifyContent="center">
+        <Loader small>Loading</Loader>
+      </Flex>
+    </>
   )
   return(
     <>
-      <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}} >Used in Block(s) inside pages:</Typography>
+      <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}} >
+        {formatMessage({
+          id: getTrad('products-input-modal.related.has-block-relation')
+        })}
+      </Typography>
       {data && (
         <>
           {data?.productPage?.map(block => (
@@ -61,11 +71,20 @@ export const BlocksRelation = ({product}) => {
             </a>
           ))}
           {data?.editorialPage?.map(block => {
-            console.log('yoooooooooooooooooooooooooo',block)
             return (
               <a href={`${EDITORIAL_PAGE_URL}/${block.id}`}>
-                <Status style={{marginTop: '8px'}} size={'S'} variant={block?.publishedAt ? 'success' : 'secondary'}
-                        showBullet={false}>
+                <Status style={{marginTop: '8px'}} size={'S'} variant={block?.publishedAt ? 'success' : 'secondary'} showBullet={false}>
+                  <Typography>
+                    {block.name}
+                  </Typography>
+                </Status>
+              </a>
+            );
+          })}
+          {data?.templates?.map(block => {
+            return (
+              <a href={`${TEMPLATE_URL}/${block.id}`}>
+                <Status style={{marginTop: '8px'}} size={'S'} variant={block?.publishedAt ? 'success' : 'secondary'} showBullet={false}>
                   <Typography>
                     {block.name}
                   </Typography>
@@ -78,7 +97,9 @@ export const BlocksRelation = ({product}) => {
       {Object.values(data).every(val => Array.isArray(val) && val.length === 0) && (
         <Status style={{marginTop: '8px'}} variant={'neutral'} showBullet={false}>
           <Typography>
-            Not used in any blocks.
+            {formatMessage({
+              id: getTrad('products-input-modal.related.empty-block-relation')
+            })}
           </Typography>
         </Status>
       )}
