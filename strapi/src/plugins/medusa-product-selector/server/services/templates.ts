@@ -1,7 +1,7 @@
 import { Strapi } from '@strapi/strapi';
 
 export default ({ strapi }: { strapi: Strapi }) => ({
-  async findAll(query) {
+  async findAll() {
     return await strapi.entityService.findMany('plugin::medusa-product-selector.template', {
       populate: ['deep']
     })

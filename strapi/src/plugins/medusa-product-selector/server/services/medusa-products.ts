@@ -1,7 +1,8 @@
 import { Strapi } from '@strapi/strapi';
 import {useMedusaClient} from "../utils/useMedusaClient";
+import config from "../../admin/src/config";
 
-const PRODUCTS_PER_PAGE = 12
+const {PRODUCTS_PER_PAGE} = config
 
 const getFilters = (params) => {
   const filters = {}

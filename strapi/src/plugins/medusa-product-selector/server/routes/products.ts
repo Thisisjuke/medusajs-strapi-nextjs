@@ -25,4 +25,13 @@ export default [
       auth: false
     },
   },
+  {
+    method: 'GET',
+    path: '/product/blocks',
+    handler: 'medusaProducts.findWithBlockDetails',
+    config: {
+      policies: [],
+      auth: false
+    },
+  },
 ]

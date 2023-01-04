@@ -10,7 +10,11 @@ import {
   Grid,
   GridItem
 } from '@strapi/design-system'
+import { useIntl } from 'react-intl'
 import styled from 'styled-components';
+import {BlocksRelation} from "./BlocksRelation";
+import config from "../../config";
+import getTrad from "../../utils/getTrad";
 
 const ProductImageWrapper = styled.div`
   border: 1px solid lightgray;
@@ -33,10 +37,14 @@ const Tag = styled.div`
   padding: 6px 10px;
   font-size: 0.8em;
   margin-right: 5px;
+
   background-color: ${({theme}) => theme.colors.primary100 };
 `;
 
+const {PRODUCT_PAGE_URL} = config
+
 const ProductDisplay = ({product}) => {
+  const { formatMessage } = useIntl();
   const {title, description, thumbnail, images = [], tags = []} = product
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
@@ -55,7 +63,11 @@ const ProductDisplay = ({product}) => {
           <Grid gap={4}>
             <GridItem col={6} s={12}>
             <Box padding={4} hasRadius background="neutral0" shadow="tableShadow">
-              <Typography as={'p'} style={{marginBottom: '8px', fontSize: '0.8rem'}} fontWeight="semiBold" variant="sigma">Thumbnail:</Typography>
+              <Typography as={'p'} style={{marginBottom: '8px', fontSize: '0.8rem'}} fontWeight="semiBold" variant="sigma">
+                {formatMessage({
+                  id: getTrad('products-input-modal.thumbnail-label')
+                })}
+              </Typography>
               <ProductImageWrapper>
                 <ProductImage src={thumbnail} alt={title} />
               </ProductImageWrapper>
@@ -63,7 +75,11 @@ const ProductDisplay = ({product}) => {
             </GridItem>
             <GridItem col={6} s={12}>
               <Box padding={4} hasRadius background="neutral0" shadow="tableShadow">
-                <Typography as={'p'} style={{marginBottom: '8px', fontSize: '0.8rem'}} fontWeight="semiBold" variant="sigma">Pictures:</Typography>
+                <Typography as={'p'} style={{marginBottom: '8px', fontSize: '0.8rem'}} fontWeight="semiBold" variant="sigma">
+                  {formatMessage({
+                    id: getTrad('products-input-modal.pictures-label')
+                  })}
+                </Typography>
                 <CarouselInput
                   selectedSlide={selectedIndex}
                   previousLabel="Previous slide"
@@ -105,16 +121,26 @@ const ProductDisplay = ({product}) => {
           <Box hasRadius background="neutral0" shadow="tableShadow">
             <>
               <Box padding={4}>
-                <Typography as={'p'} style={{marginBottom: '2px', fontSize: '0.8rem'}} fontWeight="semiBold" variant="sigma">Related Page</Typography>
+                <Typography as={'p'} style={{marginBottom: '2px', fontSize: '0.8rem'}} fontWeight="semiBold" variant="sigma">
+                  {formatMessage({
+                    id: getTrad('products-input-modal.related.title')
+                  })}
+                </Typography>
                 <Typography as={'p'} style={{marginBottom: '6px', fontSize: '0.8rem'}}>
-                  Here you can find where this product is used.
+                  {formatMessage({
+                    id: getTrad('products-input-modal.related.subtitle')
+                  })}
                 </Typography>
                 <Divider/>
                 {product && product?.relatedPages?.length > 0 && (
                   <>
-                    <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}} >Linked on Page(s):</Typography>
+                    <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}} >
+                      {formatMessage({
+                        id: getTrad('products-input-modal.related.has-page')
+                      })}
+                    </Typography>
                     {product?.relatedPages.map(page => (
-                      <a href={`/admin/content-manager/collectionType/plugin::medusa-product-selector.page/${page.id}`}>
+                      <a href={`${PRODUCT_PAGE_URL}/${page.id}`}>
                         <Status variant={page?.publishedAt ? 'success' : 'secondary'} showBullet={false}>
                           <Typography>
                             {page.name}
@@ -126,9 +152,13 @@ const ProductDisplay = ({product}) => {
                 )}
                 {product && product?.relatedCollections?.length > 0 && (
                   <>
-                    <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}} >Included in Collection(s):</Typography>
+                    <Typography as={'p'} style={{margin: '12px 0px 4px 0px'}}>
+                      {formatMessage({
+                        id: getTrad('products-input-modal.related.has-collection')
+                      })}
+                    </Typography>
                     {product?.relatedCollections.map(collection => (
-                      <a href={`/admin/content-manager/collectionType/plugin::medusa-product-selector.page/${collection.id}`}>
+                      <a href={`${PRODUCT_PAGE_URL}/${collection.id}`}>
                         <Status variant={collection?.publishedAt ? 'success' : 'secondary'} showBullet={false}>
                           <Typography>
                             {collection.name}
@@ -141,10 +171,13 @@ const ProductDisplay = ({product}) => {
                 {(!product?.relatedPages || product?.relatedPages.length === 0) && (!product?.relatedCollections || product?.relatedCollections.length === 0) && (
                   <Status style={{marginTop: '8px'}} variant={'neutral'} showBullet={false}>
                     <Typography>
-                      Not related to any pages.
+                      {formatMessage({
+                        id: getTrad('products-input-modal.related.empty-page-relation')
+                      })}
                     </Typography>
                   </Status>
                 )}
+                <BlocksRelation product={product} />
               </Box>
             </>
           </Box>
