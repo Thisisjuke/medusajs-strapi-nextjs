@@ -63,20 +63,9 @@ export default {
           id: 'settings',
           to: `/settings/${pluginId}/api`,
           Component: async () => {
-            return import('./pages/SettingsPage/api');
+            return import('./pages/SettingsPage');
           },
-        },
-        {
-          intlLabel: {
-            id: getTrad(`settings-page.webhooks`),
-            defaultMessage: 'Webhooks Settings',
-          },
-          id: 'settings',
-          to: `/settings/${pluginId}/webhooks`,
-          Component: async () => {
-            return import('./pages/SettingsPage/webhooks');
-          },
-        },
+        }
       ]
     );
     app.addMenuLink({

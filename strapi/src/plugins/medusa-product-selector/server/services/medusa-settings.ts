@@ -12,7 +12,8 @@ const createDefaultConfig = async () => {
   const pluginStore = getPluginStore();
   const value = {
     medusaServerBaseUrl: process.env.MEDUSA_SERVER_BASE_URL || null,
-    isLoadedFromConfig: !!process.env.MEDUSA_SERVER_BASE_URL
+    isLoadedFromConfig: !!process.env.MEDUSA_SERVER_BASE_URL,
+    webhooksUrl: [],
   };
   await pluginStore.set({ key: 'settings', value });
 
