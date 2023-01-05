@@ -61,9 +61,20 @@ export default {
             defaultMessage: 'API Settings',
           },
           id: 'settings',
-          to: `/settings/${pluginId}`,
+          to: `/settings/${pluginId}/api`,
           Component: async () => {
-            return import('./pages/SettingsPage');
+            return import('./pages/SettingsPage/api');
+          },
+        },
+        {
+          intlLabel: {
+            id: getTrad(`settings-page.webhooks`),
+            defaultMessage: 'Webhooks Settings',
+          },
+          id: 'settings',
+          to: `/settings/${pluginId}/webhooks`,
+          Component: async () => {
+            return import('./pages/SettingsPage/webhooks');
           },
         },
       ]
