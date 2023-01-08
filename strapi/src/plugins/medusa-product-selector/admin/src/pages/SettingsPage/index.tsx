@@ -106,10 +106,10 @@ const Settings = () => {
                       {...field}
                       placeholder="http://localhost:8000"
                       label={formatMessage({
-                        id: getTrad('settings-page.input-label')
+                        id: getTrad('settings-page.url.input-label')
                       })}
                       hint={formatMessage({
-                        id: getTrad('settings-page.input-hint')
+                        id: getTrad('settings-page.url.input-hint')
                       })}
                       disabled={data?.isLoadedFromConfig}
                       error={!data?.medusaServerBaseUrl ? formatMessage({id: getTrad('settings-page.error-message')}) : undefined}

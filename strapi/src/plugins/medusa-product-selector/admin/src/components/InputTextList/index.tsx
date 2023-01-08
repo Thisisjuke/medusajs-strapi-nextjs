@@ -30,7 +30,6 @@ export const InputTextList = ({value = [], onChange,...props}) => {
   }
 
   const removeValue = (val) => {
-    console.log(val)
     const obj = JSON.parse(JSON.stringify(value))
     obj.splice(obj.indexOf(val), 1)
     onChange(obj)

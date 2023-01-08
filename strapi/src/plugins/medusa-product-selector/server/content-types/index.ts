@@ -20,6 +20,12 @@ export default {
           "unique": true,
           "required": true
         },
+        "template": {
+          "type": "relation",
+          "relation": "manyToOne",
+          "target": "plugin::medusa-product-selector.template",
+          "inversedBy": "editorial_pages"
+        }
       }
     })
   },
@@ -33,6 +39,14 @@ export default {
         "pluralName": "collection-pages",
         "displayName": "Collection Page"
       },
+      attributes: {
+        "template": {
+          "type": "relation",
+          "relation": "manyToOne",
+          "target": "plugin::medusa-product-selector.template",
+          "inversedBy": "collection_pages"
+        }
+      }
     })
   },
   'product-page': {
@@ -44,6 +58,14 @@ export default {
         "pluralName": "product-pages",
         "displayName": "Product Page"
       },
+      attributes: {
+        "template": {
+          "type": "relation",
+          "relation": "manyToOne",
+          "target": "plugin::medusa-product-selector.template",
+          "inversedBy": "product_pages"
+        }
+      }
     })
   },
   'template': templateSchema

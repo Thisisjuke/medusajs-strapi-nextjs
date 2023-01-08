@@ -2,6 +2,14 @@ import { Strapi } from '@strapi/strapi';
 import {useMedusaClient} from "../utils/useMedusaClient";
 
 export default ({ strapi }: { strapi: Strapi }) => ({
+  async findById(id) {
+    const medusa = await useMedusaClient()
+
+    const c = await medusa.collections.retrieve(id)
+    const { collection } = c;
+
+    return collection
+  },
   async findAll() {
     const medusa = await useMedusaClient()
 

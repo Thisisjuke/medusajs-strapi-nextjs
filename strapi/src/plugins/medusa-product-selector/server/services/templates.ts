@@ -6,6 +6,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       populate: ['deep']
     })
   },
+  async findById(id) {
+    return await strapi.db.query('plugin::medusa-product-selector.template').findOne({
+      where:           {
+        id: id,
+      },
+      populate: ['deep']
+    })
+  },
   async findTemplateForCollection(query) {
     const collectionId = query?.id
     const resourceType = query?.resourceType
