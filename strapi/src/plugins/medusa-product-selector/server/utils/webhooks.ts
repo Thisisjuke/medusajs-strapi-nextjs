@@ -11,11 +11,8 @@ const sendRevalidate = async (urls, payload) => {
   }
 }
 
-export const revalidateFrontendPages = async (entry) => {
+export const revalidateFrontendPages = async (resourceType, resource) => {
   const {webhooksUrl} = await strapi.plugin('medusa-product-selector').service('medusaSettings').getSettings()
-
-  const resourceType = entry?.model?.uid
-  const resource = entry?.result
 
   const revalidate = {
     slugs: [],

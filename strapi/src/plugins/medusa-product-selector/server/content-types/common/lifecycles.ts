@@ -2,17 +2,19 @@ import {revalidateFrontendPages} from "../../utils/webhooks";
 
 export default {
   afterCreate: async (entry) => {
-    await revalidateFrontendPages(entry)
+    await revalidateFrontendPages(entry?.model?.uid, entry?.result)
   },
   afterUpdate: async (entry) => {
-    await revalidateFrontendPages(entry)
+    await revalidateFrontendPages(entry?.model?.uid, entry?.result)
   },
   beforeUpdate: async (entry) => {
-    //console.log(entry)
-    //TODO: check integrity of modified element: we have to revalidate elements that has been deleted, not only added
-    //await revalidateFrontendPages(entry)
+    const resource = await strapi.db.query(entry.model.uid).findOne({
+      where: entry.params.where,
+      populate: ['deep']
+    })
+    await revalidateFrontendPages(entry?.model?.uid, resource)
   },
   beforeDelete: async (entry) => {
-    await revalidateFrontendPages(entry)
+    await revalidateFrontendPages(entry?.model?.uid, entry?.result)
   },
 }
