@@ -1,15 +1,3 @@
-import {revalidateFrontendPages} from "../../utils/webhooks";
+import lifecycles from "../common/lifecycles";
 
-export default {
-  afterCreate: async (entry) => {
-    await revalidateFrontendPages(entry)
-  },
-
-  afterUpdate: async (entry) => {
-    await revalidateFrontendPages(entry)
-  },
-
-  afterDelete: async (entry) => {
-    await revalidateFrontendPages(entry)
-  }
-}
+export default lifecycles

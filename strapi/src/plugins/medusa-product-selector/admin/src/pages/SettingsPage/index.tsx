@@ -1,40 +1,47 @@
 import * as React from 'react';
-
-import { Box, Stack, Button, Grid, GridItem, HeaderLayout, ContentLayout, TextInput } from '@strapi/design-system';
+import { Box, Button, Grid, GridItem, HeaderLayout, ContentLayout, TextInput, Status } from '@strapi/design-system';
 import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin';
 import {Check} from '@strapi/icons';
+import { useForm, Controller } from "react-hook-form";
+
 import { useIntl } from 'react-intl'
 import getTrad from "../../utils/getTrad";
 import settingsRequests from '../../api/settings';
+import useSWR from "swr";
+import {fetcher} from "../../utils/fetcher";
+import {InputTextList} from "../../components/InputTextList";
 
 const Settings = () => {
   const { formatMessage } = useIntl();
-
-  const [settings, setSettings] = React.useState(null);
-  const [isSaving, setIsSaving] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
   const toggleNotification = useNotification();
 
-  const updateSettingsValue = (key, value) => {
-    setSettings(current => {
-      const settings = current;
+  const [isSaving, setIsSaving] = React.useState(false);
 
-      settings[key] = value;
+  const { data, error, isLoading } = useSWR(['/medusa-product-selector/settings', {}], fetcher)
+  const { handleSubmit, control, setValue,watch } = useForm({
+    defaultValues: {
+      medusaServerBaseUrl: '',
+      webhooksUrl: []
+    }
+  });
 
-      return settings;
+  React.useEffect(() => {
+    setValue('medusaServerBaseUrl', data?.medusaServerBaseUrl)
+    setValue('webhooksUrl', data?.webhooksUrl)
+  }, [data])
+
+  React.useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      console.log(name, value)
     });
-  };
 
-  const fetchData = async () => {
-    if(isLoading === false) setIsLoading(true)
-    const settings = await settingsRequests.getSettings()
-    setSettings(settings)
-    setIsLoading(false)
-  }
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
-  const handleSubmit = async () => {
+  const onSubmit = async (data) => {
+    console.log(data);
     setIsSaving(true);
-    const res = await settingsRequests.setSettings(settings);
+    await settingsRequests.setSettings(data);
     setIsSaving(false);
     toggleNotification({
       type: 'success',
@@ -44,14 +51,13 @@ const Settings = () => {
     });
   };
 
-  React.useEffect(() => {
-    const fetch = async () => {
-      await fetchData()
-    };
-
-    fetch().then();
-  }, []);
-
+  if(error) return (
+    <Status>
+      {formatMessage({
+        id: getTrad('common.error.message')
+      })}
+    </Status>
+  )
   if(isLoading) return <LoadingIndicatorPage />
 
   return (
@@ -66,7 +72,7 @@ const Settings = () => {
         })}
         primaryAction={
           <Button
-            onClick={handleSubmit}
+            onClick={handleSubmit(onSubmit)}
             startIcon={<Check />}
             size="L"
             disabled={isSaving}
@@ -88,27 +94,49 @@ const Settings = () => {
           paddingLeft={7}
           paddingRight={7}
         >
-          <Stack>
+          <form>
             <Grid gap={6}>
               <GridItem col={12} s={12}>
-                <TextInput
+                <Controller
                   name="medusaServerBaseUrl"
-                  placeholder="http://localhost:8000"
-                  label={formatMessage({
-                    id: getTrad('settings-page.input-label')
-                  })}
-                  hint={formatMessage({
-                    id: getTrad('settings-page.input-hint')
-                  })}
-                  disabled={settings.isLoadedFromConfig}
-                  error={!settings.medusaServerBaseUrl ? formatMessage({id: getTrad('settings-page.error-message')}) : undefined}
-                  onChange={e => updateSettingsValue('medusaServerBaseUrl', e.target.value)}
-                  defaultValue={settings.medusaServerBaseUrl}
-                  value={settings.isLoadedFromConfig ? settings.medusaServerBaseUrl : undefined}
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextInput
+                      {...field}
+                      placeholder="http://localhost:8000"
+                      label={formatMessage({
+                        id: getTrad('settings-page.url.input-label')
+                      })}
+                      hint={formatMessage({
+                        id: getTrad('settings-page.url.input-hint')
+                      })}
+                      disabled={data?.isLoadedFromConfig}
+                      error={!data?.medusaServerBaseUrl ? formatMessage({id: getTrad('settings-page.error-message')}) : undefined}
+                      defaultValue={data?.medusaServerBaseUrl}
+                    />
+                  )}
+                />
+              </GridItem>
+              <GridItem col={12} s={12}>
+                <Controller
+                  name="webhooksUrl"
+                  control={control}
+                  render={({ field }) => (
+                    <InputTextList
+                      {...field}
+                      placeholder="http://localhost:8000/revalidate"
+                      label={formatMessage({
+                        id: getTrad('settings-page.webhooks.input-label')
+                      })}
+                      error={!data?.medusaServerBaseUrl ? formatMessage({id: getTrad('settings-page.error-message')}) : undefined}
+                      defaultValue={data?.medusaServerBaseUrl}
+                    />
+                  )}
                 />
               </GridItem>
             </Grid>
-          </Stack>
+          </form>
         </Box>
       </ContentLayout>
     </>

@@ -61,11 +61,11 @@ export default {
             defaultMessage: 'API Settings',
           },
           id: 'settings',
-          to: `/settings/${pluginId}`,
+          to: `/settings/${pluginId}/api`,
           Component: async () => {
             return import('./pages/SettingsPage');
           },
-        },
+        }
       ]
     );
     app.addMenuLink({

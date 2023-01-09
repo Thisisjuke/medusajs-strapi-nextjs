@@ -1,10 +1,18 @@
+export interface PageSchema {
+  collectionName: string,
+  info?: Record<string, any>,
+  attributes?: Record<string, any>,
+  withProducts?: boolean,
+  withCollections?: boolean,
+}
+
 export const generatePageAttributes = ({
   collectionName,
   info = {},
   attributes = {},
   withProducts = true,
   withCollections = true
-}) => {
+}:PageSchema) => {
 
   return ({
     kind: "collectionType",
@@ -28,12 +36,6 @@ export const generatePageAttributes = ({
         type: "string",
         unique: true,
         required: true
-      },
-      template: {
-        type: "relation",
-        relation: "oneToMany",
-        target: "plugin::medusa-product-selector.template",
-        mappedBy: "page"
       },
       ...(withCollections && {
         collectionIds: {
